@@ -1,2 +1,2 @@
 --Used to generate orm from existing database
-typeorm-model-generator -h localhost -d stackerflow -p 3306 -u root -x Password#1 -e mysql
+npx typeorm-model-generator -h localhost -d stackerflow -p 3306 -u root -x Password#1 -e mysql

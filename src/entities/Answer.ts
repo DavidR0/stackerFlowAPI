@@ -4,18 +4,16 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Question } from "./Question";
 import { User } from "./User";
-import { Vote } from "./Vote";
 
 @Index("question answer_Answer_ID_uindex", ["answerId"], { unique: true })
 @Index("question answer_user_User_ID_fk", ["userId"], {})
 @Index("question answer_question_Question_ID_fk", ["questionId"], {})
-@Entity("question answer", { schema: "stackerflow" })
-export class QuestionAnswer {
+@Entity("answer", { schema: "stackerflow" })
+export class Answer {
   @PrimaryGeneratedColumn({ type: "int", name: "Answer_ID" })
   answerId: number;
 
@@ -49,20 +47,17 @@ export class QuestionAnswer {
   })
   deleted: boolean | null;
 
-  @ManyToOne(() => Question, (question) => question.questionAnswers, {
+  @ManyToOne(() => Question, (question) => question.answers, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "Question_ID", referencedColumnName: "questionId" }])
   question: Question;
 
-  @ManyToOne(() => User, (user) => user.questionAnswers, {
+  @ManyToOne(() => User, (user) => user.answers, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "User_ID", referencedColumnName: "userId" }])
   user: User;
-
-  @OneToMany(() => Vote, (vote) => vote.answer)
-  votes: Vote[];
 }

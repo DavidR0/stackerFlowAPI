@@ -1,7 +1,15 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Question } from "./Question";
 import { Tag } from "./Tag";
 
+@Index("question_tag_ID_uindex", ["id"], { unique: true })
 @Index("question_tag_question_Question_ID_fk", ["questionId"], {})
 @Index("question_tag_tag_Tag_ID_fk", ["tagId"], {})
 @Entity("question_tag", { schema: "stackerflow" })
@@ -11,6 +19,9 @@ export class QuestionTag {
 
   @Column("int", { name: "Question_ID", nullable: true })
   questionId: number | null;
+
+  @PrimaryGeneratedColumn({ type: "int", name: "ID" })
+  id: number;
 
   @ManyToOne(() => Question, (question) => question.questionTags, {
     onDelete: "NO ACTION",

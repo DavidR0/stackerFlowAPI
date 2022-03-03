@@ -7,10 +7,9 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Answer } from "./Answer";
 import { User } from "./User";
-import { QuestionAnswer } from "./QuestionAnswer";
 import { QuestionTag } from "./QuestionTag";
-import { Vote } from "./Vote";
 
 @Index("Question_Question_ID_uindex", ["questionId"], { unique: true })
 @Index("question_user_User_ID_fk", ["userId"], {})
@@ -49,6 +48,9 @@ export class Question {
   @Column("int", { name: "VoteCount", nullable: true, default: () => "'0'" })
   voteCount: number | null;
 
+  @OneToMany(() => Answer, (answer) => answer.question)
+  answers: Answer[];
+
   @ManyToOne(() => User, (user) => user.questions, {
     onDelete: "NO ACTION",
     onUpdate: "NO ACTION",
@@ -56,12 +58,6 @@ export class Question {
   @JoinColumn([{ name: "User_ID", referencedColumnName: "userId" }])
   user: User;
 
-  @OneToMany(() => QuestionAnswer, (questionAnswer) => questionAnswer.question)
-  questionAnswers: QuestionAnswer[];
-
   @OneToMany(() => QuestionTag, (questionTag) => questionTag.question)
   questionTags: QuestionTag[];
-
-  @OneToMany(() => Vote, (vote) => vote.question)
-  votes: Vote[];
 }
