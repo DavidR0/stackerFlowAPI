@@ -2,6 +2,7 @@ import log from "./logger"
 import express from 'express'
 import config from 'config'
 import connectDB from "./db/connectionDB";
+import routesLoader from "./routes/routesLoader";
 
 const port = config.get("server.port") as number;
 const host = config.get("server.host") as string;
@@ -14,5 +15,5 @@ app.use(express.urlencoded({ extended: true }));
 app.listen(port,host,()=>{
     log.info(`Server listening at http://${host}:${port}`);
     connectDB();
-    // routes(app);
+    routesLoader(app);
 });
