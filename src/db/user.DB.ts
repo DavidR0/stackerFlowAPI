@@ -1,6 +1,7 @@
 import { User } from "../entities/User";
 import { userDTO } from "../entities/User";
 import { dbConnection } from "./connectionDB";
+import {getRepository} from "typeorm";
 
 export default class userDB{
     
@@ -11,8 +12,13 @@ export default class userDB{
         const dbUser = new User();
 
         dbUser.userName = user.userName;
-        dbUser.email = user.email;
-        dbUser.password = user.password
+
+        if(user.email && user.password){
+            dbUser.email = user.email;
+            dbUser.password = user.password
+        }else{
+            throw new Error("Cannot create user, password and email required");
+        }
     
         if(user.twoFact){
             dbUser.twoFact = user.twoFact;
@@ -23,5 +29,53 @@ export default class userDB{
         }
 
         await connection.manager.save(dbUser);
+    }
+
+    async getUser(query: any){
+        const userRepository = getRepository(User);
+        const foundUser = await userRepository.findOne(query);
+        return foundUser;
+    }
+
+    async updateUser(user: userDTO){
+        const userRepository = getRepository(User);
+        const foundUser = await userRepository.findOne(user.userName);
+
+        if(foundUser){
+
+            //Set values that require updating                       
+            if(user.password){
+                foundUser.password = user.password;
+            }
+    
+            if(user.email){
+                foundUser.email = user.email;
+            }
+                
+            if(user.type){
+                foundUser.type = user.type;
+            }
+    
+            if(user.banned){
+                foundUser.banned = user.banned;
+            }
+    
+            if(user.twoFact){
+                foundUser.twoFact = user.twoFact;
+            }
+    
+            if(user.score){
+                foundUser.score = user.score;
+            }
+    
+            if(user.privateKey){
+                foundUser.privateKey;
+            }           
+
+            await userRepository.save(foundUser);
+
+        }else{
+            throw new Error("User does not exist");
+        }
     }
 }

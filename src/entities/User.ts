@@ -7,12 +7,13 @@ import {
 } from "typeorm";
 import { Answer } from "./Answer";
 import { Question } from "./Question";
+import { Session } from "./Session";
 import { Vote } from "./Vote";
 
 export interface userDTO{
   userName: string,
-  email: string,
-  password: string,
+  email?: string,
+  password?: string,
   type?: "User" | "Admin" | null;
   userID?: number,
   banned?: boolean
@@ -73,6 +74,9 @@ export class User {
 
   @OneToMany(() => Question, (question) => question.user)
   questions: Question[];
+
+  @OneToMany(() => Session, (session) => session.user)
+  sessions: Session[];
 
   @OneToMany(() => Vote, (vote) => vote.user)
   votes: Vote[];

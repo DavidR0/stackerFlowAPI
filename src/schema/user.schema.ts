@@ -1,4 +1,4 @@
-import { object, string, ref } from "yup";
+import { object, string, ref, number } from "yup";
 
 export const createUserSchema = object({
     body: object({
@@ -7,6 +7,12 @@ export const createUserSchema = object({
         .required("Password is required")
         .min(6, "Password is too short"),
         email: string().email("Must be a valid email").required("Email is required"),
+    }),
+});
+
+export const getUpdateUserSchema = object({
+    body: object({
+        userId: number().required("userId is required"),
     }),
 });
 

@@ -7,7 +7,6 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { User } from "./User";
-import { VoteItemType } from "./VoteItemType";
 
 @Index("vote_Vote_ID_uindex", ["voteId"], { unique: true })
 @Index("vote_user_User_ID_fk", ["userId"], {})
@@ -23,8 +22,11 @@ export class Vote {
   @Column("int", { name: "Item_ID", nullable: true })
   itemId: number | null;
 
-  @Column("enum", { name: "Type", enum: ["up", "down"] })
-  type: "up" | "down";
+  @Column("enum", { name: "VoteType", enum: ["up", "down"] })
+  voteType: "up" | "down";
+
+  @Column("enum", { name: "ItemType", enum: ["question", "answer"] })
+  itemType: "question" | "answer";
 
   @ManyToOne(() => User, (user) => user.votes, {
     onDelete: "NO ACTION",
@@ -32,11 +34,4 @@ export class Vote {
   })
   @JoinColumn([{ name: "User_ID", referencedColumnName: "userId" }])
   user: User;
-
-  @ManyToOne(() => VoteItemType, (voteItemType) => voteItemType.votes, {
-    onDelete: "NO ACTION",
-    onUpdate: "NO ACTION",
-  })
-  @JoinColumn([{ name: "Item_ID", referencedColumnName: "id" }])
-  item: VoteItemType;
 }

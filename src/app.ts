@@ -12,7 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.listen(port,host,()=>{
+app.listen(port,host, ()=>{
     log.info(`Server listening at http://${host}:${port}`);
 
     const db = dbConnection.getInstance();

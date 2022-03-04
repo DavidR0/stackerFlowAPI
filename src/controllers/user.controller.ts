@@ -15,11 +15,25 @@ export default class userController{
             //create user object in db
             await uService.createUser(user);
 
-            log.info("Successfully created user")
+            log.info("Successfully created user.")
             return res.send(omit(user,"password"));
 
         }catch(e: any){
             return res.status(409).send(e.message);
+        }
+    }
+
+    async getUserHandler(req: Request, res: Response){
+        try{
+
+            const uService = new userService();
+            //Get the user, userId is guaranteed by request validator middle ware
+            const user = await uService.getUserById(req.body.userId);
+            log.info("Successfully got user.")
+            res.send(user);
+
+        }catch(e: any){
+            return res.status(404).send(e.message);
         }
     }
 }
