@@ -5,6 +5,8 @@ import userDB from "../db/user.DB";
 import bcrypt from "bcrypt"
 import config from "config"
 
+
+
 export default class userService{
  
     async createUser(user: userDTO) {
@@ -52,12 +54,6 @@ export default class userService{
             user.password = hash;
         }
         await new userDB().updateUser(user,query);
-    }
-
-    compareUserPassword(candidatePassword:string, user: userDTO){
-        if(user.password){
-            return bcrypt.compare(candidatePassword,user.password).catch((e)=>false);
-        }
     }
     
     toUserDTO(user: any): userDTO{

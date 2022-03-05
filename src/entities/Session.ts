@@ -8,11 +8,18 @@ import {
 } from "typeorm";
 import { User } from "./User";
 
+export interface sessionDTO{
+  id?: number,
+  jwtToken?: string,
+  valid?: boolean
+  userId?: number,
+};
+
 @Index("session_ID_uindex", ["id"], { unique: true })
 @Index("session_user_User_ID_fk", ["userId"], {})
 @Entity("session", { schema: "stackerflow" })
 export class Session {
-  @Column("varchar", { name: "JwtToken", length: 255 })
+  @Column("varchar", { name: "JwtToken", length: 1520 })
   jwtToken: string;
 
   @Column("tinyint", { name: "Valid", width: 1, default: () => "'1'" })

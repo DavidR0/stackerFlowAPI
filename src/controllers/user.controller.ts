@@ -31,7 +31,7 @@ export default class userController{
             //Get the user, userId is guaranteed by request validator middle ware
             const user = await uService.getUserById(req.body.userID);
             log.info("Successfully got user.")
-            res.send(user);
+            return res.send(user);
 
         }catch(e: any){
             log.error(e);
@@ -44,10 +44,10 @@ export default class userController{
         const user = uService.toUserDTO(req.body);
         try{
             await uService.updateUserById(user);
-            res.status(200).send("Successfully updated user.")
+            return res.status(200).send("Successfully updated user.")
         }catch(e: any){
             log.error(e);
-            res.send(e.message);
+            return res.send(e.message);
         }
     }
 }
