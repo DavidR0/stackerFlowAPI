@@ -11,13 +11,13 @@ export default class userDB{
         const connection = db.getDBConnection();
         const dbUser = new User();
 
-        dbUser.userName = user.userName;
 
-        if(user.email && user.password){
+        if(user.email && user.password && user.userName){
             dbUser.email = user.email;
             dbUser.password = user.password
+            dbUser.userName = user.userName;
         }else{
-            throw new Error("Cannot create user, password and email required");
+            throw new Error("Cannot create user, password, email and username required");
         }
     
         if(user.twoFact){
@@ -37,9 +37,10 @@ export default class userDB{
         return foundUser;
     }
 
-    async updateUser(user: userDTO){
+    async updateUser(user: userDTO, findByQuery: any){
         const userRepository = getRepository(User);
-        const foundUser = await userRepository.findOne(user.userName);
+        const foundUser = await userRepository.findOne(findByQuery);
+        console.log(findByQuery);
 
         if(foundUser){
 
@@ -69,7 +70,7 @@ export default class userDB{
             }
     
             if(user.privateKey){
-                foundUser.privateKey;
+                foundUser.privateKey = user.privateKey;
             }           
 
             await userRepository.save(foundUser);

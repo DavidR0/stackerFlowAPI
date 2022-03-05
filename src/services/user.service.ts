@@ -9,7 +9,7 @@ export default class userService{
  
     async createUser(user: userDTO) {
         try{
-            if(user.password){
+            if(user.password && user.email && user.userName){
                 //Create two factor auth secret
                 if(user.twoFact) {
                     const twoFactorAuthSecret = speakeasy.generateSecret();
@@ -25,7 +25,7 @@ export default class userService{
                 const uDB = new userDB();
                 await uDB.addUser(user);
             }else{
-                throw new Error("Password is needed.");
+                throw new Error("Password, Email and Username is needed.");
             }
         } catch(e: any){
             log.error(e);
@@ -33,12 +33,25 @@ export default class userService{
         }
     };
 
-    async getUserById(userId : number){
+    async getUserById(userID : number){
         const query = {
-            userId: userId
+            userId: userID
         };
         const user = await new userDB().getUser(query);
         return user;
+    }
+
+    async updateUserById(user : userDTO){
+        const query = {
+            userId: user.userID
+        };
+        //Check if we are updating the password, if so hash it
+        if(user.password){
+            const salt = await bcrypt.genSalt(config.get('security.saltWorkFactor'));
+            const hash = await bcrypt.hashSync(user.password,salt)  
+            user.password = hash;
+        }
+        await new userDB().updateUser(user,query);
     }
 
     compareUserPassword(candidatePassword:string, user: userDTO){
@@ -48,18 +61,12 @@ export default class userService{
     }
     
     toUserDTO(user: any): userDTO{
-        //Check if mandatory items exists if not throw error
-        if(!user.userName){
-            log.error("Could not convert object to userDTO.");
-            throw new Error("Could not convert object to userDTO.");
+
+        let userObj : userDTO = {};
+
+        if(user.userName){
+            userObj.userName = user.userName;
         }
-
-        const userName = user.userName;
-
-        //Check all the other optional items
-        let userObj : userDTO = {
-            userName,
-        };
 
         if(user.password){
             userObj.password = user.password;
@@ -90,7 +97,7 @@ export default class userService{
         }
 
         if(user.privateKey){
-            userObj.privateKey;
+            userObj.privateKey = user.privateKey;
         }
       
         return userObj;

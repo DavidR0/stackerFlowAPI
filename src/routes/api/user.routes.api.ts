@@ -9,6 +9,6 @@ const userCtrl = new userController();
 
 router.post("/create",validate(createUserSchema),userCtrl.createUserHandler);
 router.get("/get",validate(getUpdateUserSchema),userCtrl.getUserHandler);
-// router.patch("/update",validate(getUpdateUserSchema),userCtrl.updateUserHandler);
+router.patch("/update",validate(getUpdateUserSchema),userCtrl.updateUserHandler);
 
 export default router;

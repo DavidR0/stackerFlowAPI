@@ -11,10 +11,10 @@ import { Session } from "./Session";
 import { Vote } from "./Vote";
 
 export interface userDTO{
-  userName: string,
+  userName?: string,
   email?: string,
   password?: string,
-  type?: "User" | "Admin" | null;
+  type?: "User" | "Admin" ;
   userID?: number,
   banned?: boolean
   twoFact?: boolean,

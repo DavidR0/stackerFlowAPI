@@ -19,6 +19,7 @@ export default class userController{
             return res.send(omit(user,"password"));
 
         }catch(e: any){
+            log.error(e);
             return res.status(409).send(e.message);
         }
     }
@@ -28,12 +29,25 @@ export default class userController{
 
             const uService = new userService();
             //Get the user, userId is guaranteed by request validator middle ware
-            const user = await uService.getUserById(req.body.userId);
+            const user = await uService.getUserById(req.body.userID);
             log.info("Successfully got user.")
             res.send(user);
 
         }catch(e: any){
+            log.error(e);
             return res.status(404).send(e.message);
+        }
+    }
+
+    async updateUserHandler(req: Request, res: Response){
+        const uService = new userService();
+        const user = uService.toUserDTO(req.body);
+        try{
+            await uService.updateUserById(user);
+            res.status(200).send("Successfully updated user.")
+        }catch(e: any){
+            log.error(e);
+            res.send(e.message);
         }
     }
 }

@@ -12,7 +12,7 @@ export const createUserSchema = object({
 
 export const getUpdateUserSchema = object({
     body: object({
-        userId: number().required("userId is required"),
+        userID: number().required("userID is required"),
     }),
 });
 
