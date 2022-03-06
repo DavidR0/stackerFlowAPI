@@ -1,6 +1,5 @@
-import { dbConnection } from "./connectionDB";
 import {getRepository} from "typeorm";
-import { Session } from "../entities/Session";
+import { Session, sessionDTO } from "../entities/Session";
 import { User } from "../entities/User";
 
 export default class sessionDB{
@@ -15,8 +14,39 @@ export default class sessionDB{
         return await sessionRepository.save(sesh);
     }
 
-    async getValidSessionsByUser(userID: number){
+    async getSessions(query: object){
         const sessionRepository = getRepository(Session);
-        return await sessionRepository.findOne({userId: userID, valid: true})
+        return await sessionRepository.find(query);
     }
+
+    async getOneSession(query: object){
+        const sessionRepository = getRepository(Session);
+        return await sessionRepository.findOne(query);
+    }
+
+    async updateSession(session: sessionDTO, findByQuery: object){
+        const sessionRepository = getRepository(Session);
+        const foundSession = await sessionRepository.findOne(findByQuery);
+
+        if(foundSession){
+            if(session.jwtToken){
+                foundSession.jwtToken = session.jwtToken;
+            }
+
+            if(session.valid != undefined){
+                foundSession.valid = session.valid;
+            }
+
+            await sessionRepository.save(foundSession);
+        }else{
+            throw new Error("Session does not exist");
+        }
+
+    }
+
+    async deleteSession(findByQuery: object){
+        const sessionRepository = getRepository(Session);
+        await sessionRepository.delete(findByQuery);
+    }
+
 }

@@ -1,14 +1,17 @@
 import express from "express";
 import sessionController from "../../controllers/session.controller";
 import validate from "../../middleWare/requestValidator";
-import { createSessionSchema} from "../../schema/session.schema";
+import SessionSchema from "../../schema/session.schema";
+import requireUser from "../../middleWare/requireUser";
 
 const router = express.Router();
 
 const sessionCtrl = new sessionController();
+const sessionSchema = new SessionSchema();
 
-router.post("/create",validate(createSessionSchema),sessionCtrl.createSessionHandler);
-// router.get("/get",validate(getUpdateUserSchema),userCtrl.getUserHandler);
-// router.patch("/update",validate(getUpdateUserSchema),userCtrl.updateUserHandler);
+router.post("/create",validate(sessionSchema.createSessionSchema),sessionCtrl.createSessionHandler);
+router.get("/get",[requireUser,validate(sessionSchema.getUpdateSessionSchema)],sessionCtrl.getSessionhandler);
+router.patch("/update",[requireUser,validate(sessionSchema.getUpdateSessionSchema)],sessionCtrl.updateSessionHandler);
+router.delete("/delete",[requireUser,validate(sessionSchema.getUpdateSessionSchema)],sessionCtrl.deleteSessionHandler);
 
 export default router;

@@ -1,6 +1,9 @@
 import sessionService from "../services/session.service";
 import {Request, Response} from "express";
 import log from "../logger";
+import { sessionDTO } from "../entities/Session";
+import userService from "../services/user.service";
+
 export default class sessionController{
 
     async createSessionHandler(req: Request, res: Response){
@@ -30,21 +33,67 @@ export default class sessionController{
             return res.status(401).send("Two factor authentication failed");
         }
 
-        //Get access and session tokens
-        const tokens = await sesService.getSessionTokens(validUser);
-        //If new session tokens were created save them in db
-        if(tokens.new){
-            try{
+
+        try{
+            //Get access and session tokens
+            const tokens = await sesService.getSessionTokens(validUser);
+
+            //If new session tokens were created save them in db
+            if(tokens.new){
                 await sesService.createSession(validUser,tokens);
-            }catch(e: any){
-                log.error(e);
-                return res.send(e.message);
             }
+
+            log.info("Successfully created session.")
+            //Send created session tokens
+            return res.status(200).send({userId: validUser.userId ,refreshToken: tokens.refreshToken,accessToken: tokens.accessToken}); 
+        }catch(e: any){
+            log.error(e);
+            return res.send(e.message);
         }
 
-        log.info("Successfully created session.")
-        //Send created session tokens
-        return res.send({refreshToken: tokens.refreshToken,accessToken: tokens.accessToken}); 
     }
 
+    async getSessionhandler(req: Request, res: Response){
+
+        const user = new userService().toUserDTO(res.locals.user);
+        const session = new sessionService().toSessionDTO(req.body);
+
+        try{
+            const sessions = await new sessionService().getSession(session, user);
+            res.send(sessions);
+        }catch(e: any){
+            log.error(e);
+            return res.status(404).send(e.message);
+        }
+    }
+
+    async updateSessionHandler(req: Request, res: Response){
+
+        const user = new userService().toUserDTO(res.locals.user);
+        const sessionUpdate = new sessionService().toSessionDTO(req.body);
+        
+        try{
+            const sessions = await new sessionService().updateSession(sessionUpdate, user);
+            log.info("Successfuly updated session");
+            res.send(sessions);
+        }catch(e: any){
+            log.error(e);
+            return res.status(404).send(e.message);
+        }
+    }
+
+    async deleteSessionHandler(req: Request, res: Response){
+
+        const user = new userService().toUserDTO(res.locals.user);
+        const sessionUpdate = new sessionService().toSessionDTO(req.body);
+        
+        try{
+            const sessions = await new sessionService().deleteSession(sessionUpdate, user);
+            log.info("Successfuly deleted session");
+            res.send(sessions);
+        }catch(e: any){
+            log.error(e);
+            return res.status(404).send(e.message);
+        }
+    }
 }

@@ -39,7 +39,7 @@ nSLy4wxmoXo9E5kfQGDOOSFKP5rIgdXPP9eBWwMXvYLflqDch72tm8stVq7a1pOg
 poHc7ySE9UEWUR3O+xN2O8eXiwWfyYsJID8iQjG0S2a/Wio1OMBnKw7W9P+E61jl
 gcBNQHI/bF6nIQT/AgMBAAE=
 -----END PUBLIC KEY-----`,
-        accessTokenTtl: "10m",
-        refreshTokenTtl: "1y",
+        accessTokenTtl: "1m",
+        refreshTokenTtl: "10m",
     }
 }

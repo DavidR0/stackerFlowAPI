@@ -44,6 +44,7 @@ export default class userController{
         const user = uService.toUserDTO(req.body);
         try{
             await uService.updateUserById(user);
+            log.info("Successfully updated user.")
             return res.status(200).send("Successfully updated user.")
         }catch(e: any){
             log.error(e);

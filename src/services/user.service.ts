@@ -60,39 +60,43 @@ export default class userService{
 
         let userObj : userDTO = {};
 
-        if(user.userName){
+        if(user.userName != undefined){
             userObj.userName = user.userName;
         }
 
-        if(user.password){
+        if(user.password != undefined){
             userObj.password = user.password;
         }
 
-        if(user.email){
+        if(user.email != undefined){
             userObj.email = user.email;
         }
 
-        if(user.userID){
+        if(user.userID != undefined){
             userObj.userID = user.userID;
         }
         
-        if(user.type){
+        if(user.userId != undefined){
+            userObj.userID = user.userId;
+        }
+
+        if(user.type != undefined){
             userObj.type = user.type;
         }
 
-        if(user.banned){
+        if(user.banned != undefined){
             userObj.banned = user.banned;
         }
 
-        if(user.twoFact){
+        if(user.twoFact != undefined){
             userObj.twoFact = user.twoFact;
         }
 
-        if(user.score){
+        if(user.score != undefined){
             userObj.score = user.score;
         }
 
-        if(user.privateKey){
+        if(user.privateKey != undefined){
             userObj.privateKey = user.privateKey;
         }
       
