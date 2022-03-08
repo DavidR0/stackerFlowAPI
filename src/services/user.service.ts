@@ -35,25 +35,41 @@ export default class userService{
         }
     };
 
-    async getUserById(userID : number){
-        const query = {
-            userId: userID
-        };
-        const user = await new userDB().getUser(query);
-        return user;
+    async getUserById(requestedUser: userDTO, requestingUser: userDTO){
+        if(requestingUser.type =="Admin" || requestedUser.userID == requestingUser.userID){
+            const query = {
+                userId: requestedUser.userID
+            };
+            const user = await new userDB().getUser(query);
+            return user;        
+        }
+
+        throw new Error("User does not have access rights");
     }
 
-    async updateUserById(user : userDTO){
-        const query = {
-            userId: user.userID
-        };
-        //Check if we are updating the password, if so hash it
-        if(user.password){
-            const salt = await bcrypt.genSalt(config.get('security.saltWorkFactor'));
-            const hash = await bcrypt.hashSync(user.password,salt)  
-            user.password = hash;
+    async updateUserById(userToUpdate: userDTO, userRequestingUpdate: userDTO){
+        if(userRequestingUpdate.type =="Admin" || userRequestingUpdate.userID == userToUpdate.userID){
+            const query = {
+                userId: userToUpdate.userID
+            };
+            //Check if we are updating the password, if so hash it
+            if(userToUpdate.password){
+                const salt = await bcrypt.genSalt(config.get('security.saltWorkFactor'));
+                const hash = await bcrypt.hashSync(userToUpdate.password,salt)  
+                userToUpdate.password = hash;
+            }
+
+            //If user is not an admin, he cannot change certain items like admin or ban status
+            if(userRequestingUpdate.type != 'Admin'){
+                delete userToUpdate.type;
+                delete userToUpdate.banned
+            }
+
+            return await new userDB().updateUser(userToUpdate,query);
         }
-        await new userDB().updateUser(user,query);
+
+        throw new Error("User does not have access rights");
+
     }
     
     toUserDTO(user: any): userDTO{

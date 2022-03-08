@@ -40,7 +40,6 @@ export default class userDB{
     async updateUser(user: userDTO, findByQuery: any){
         const userRepository = getRepository(User);
         const foundUser = await userRepository.findOne(findByQuery);
-        console.log(findByQuery);
 
         if(foundUser){
 

@@ -28,8 +28,10 @@ export default class userController{
         try{
 
             const uService = new userService();
-            //Get the user, userId is guaranteed by request validator middle ware
-            const user = await uService.getUserById(req.body.userID);
+            const requestingUser = uService.toUserDTO(res.locals.user);
+            const requestedUser = uService.toUserDTO(req.body);
+
+            const user = await uService.getUserById(requestedUser,requestingUser);
             log.info("Successfully got user.")
             return res.send(user);
 
@@ -40,10 +42,12 @@ export default class userController{
     }
 
     async updateUserHandler(req: Request, res: Response){
-        const uService = new userService();
-        const user = uService.toUserDTO(req.body);
+            const uService = new userService();
+            const userRequestingUpdate = uService.toUserDTO(res.locals.user);
+            //We have the userId due to validator
+            const userToUpdate = uService.toUserDTO(req.body);
         try{
-            await uService.updateUserById(user);
+            await uService.updateUserById(userToUpdate,userRequestingUpdate);
             log.info("Successfully updated user.")
             return res.status(200).send("Successfully updated user.")
         }catch(e: any){
