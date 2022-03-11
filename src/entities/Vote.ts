@@ -9,8 +9,8 @@ import {
 import { User } from "./User";
 
 @Index("vote_Vote_ID_uindex", ["voteId"], { unique: true })
-@Index("vote_user_User_ID_fk", ["userId"], {})
 @Index("vote_vote_item_type_ID_fk", ["itemId"], {})
+@Index("vote_user_User_ID_fk", ["userId"], {})
 @Entity("vote", { schema: "stackerflow" })
 export class Vote {
   @PrimaryGeneratedColumn({ type: "int", name: "Vote_ID" })
@@ -29,7 +29,7 @@ export class Vote {
   itemType: "question" | "answer";
 
   @ManyToOne(() => User, (user) => user.votes, {
-    onDelete: "NO ACTION",
+    onDelete: "CASCADE",
     onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "User_ID", referencedColumnName: "userId" }])

@@ -1,7 +1,6 @@
 import sessionService from "../services/session.service";
 import {Request, Response} from "express";
 import log from "../logger";
-import { sessionDTO } from "../entities/Session";
 import userService from "../services/user.service";
 
 export default class sessionController{

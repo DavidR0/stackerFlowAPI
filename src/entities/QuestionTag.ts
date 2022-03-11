@@ -24,14 +24,14 @@ export class QuestionTag {
   id: number;
 
   @ManyToOne(() => Question, (question) => question.questionTags, {
-    onDelete: "NO ACTION",
+    onDelete: "CASCADE",
     onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "Question_ID", referencedColumnName: "questionId" }])
   question: Question;
 
   @ManyToOne(() => Tag, (tag) => tag.questionTags, {
-    onDelete: "NO ACTION",
+    onDelete: "CASCADE",
     onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "Tag_ID", referencedColumnName: "tagId" }])

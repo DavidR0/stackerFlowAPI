@@ -10,8 +10,8 @@ import { Question } from "./Question";
 import { User } from "./User";
 
 @Index("question answer_Answer_ID_uindex", ["answerId"], { unique: true })
-@Index("question answer_user_User_ID_fk", ["userId"], {})
 @Index("question answer_question_Question_ID_fk", ["questionId"], {})
+@Index("question answer_user_User_ID_fk", ["userId"], {})
 @Entity("answer", { schema: "stackerflow" })
 export class Answer {
   @PrimaryGeneratedColumn({ type: "int", name: "Answer_ID" })
@@ -39,23 +39,15 @@ export class Answer {
   })
   creationTime: Date | null;
 
-  @Column("tinyint", {
-    name: "Deleted",
-    nullable: true,
-    width: 1,
-    default: () => "'0'",
-  })
-  deleted: boolean | null;
-
   @ManyToOne(() => Question, (question) => question.answers, {
-    onDelete: "NO ACTION",
+    onDelete: "CASCADE",
     onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "Question_ID", referencedColumnName: "questionId" }])
   question: Question;
 
   @ManyToOne(() => User, (user) => user.answers, {
-    onDelete: "NO ACTION",
+    onDelete: "CASCADE",
     onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "User_ID", referencedColumnName: "userId" }])

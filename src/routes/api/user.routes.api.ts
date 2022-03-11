@@ -11,5 +11,6 @@ const userCtrl = new userController();
 router.post("/create",validate(createUserSchema),userCtrl.createUserHandler);
 router.get("/get",[requireUser,validate(getUpdateUserSchema)],userCtrl.getUserHandler);
 router.patch("/update",[requireUser,validate(getUpdateUserSchema)],userCtrl.updateUserHandler);
+router.delete("/delete",[requireUser,validate(getUpdateUserSchema)],userCtrl.deleteUserHandler);
 
 export default router;

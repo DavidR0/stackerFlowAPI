@@ -1,19 +1,24 @@
 import speakeasy from "speakeasy"
-import { User, userDTO} from "../entities/User";
+import { User} from "../entities/User";
 import userDB from "../db/user.DB";
 import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken";
 import config from 'config'
 import sessionDB from "../db/session.DB";
-import { sessionDTO } from "../entities/Session";
+import { sessionDTO, userDTO } from "../entities/dto";
 import log from "../logger";
 import userService from "./user.service";
+import { Session } from "../entities/Session";
+import JwtService from "./jwt.service";
 
-export default class sessionService{
+export default class SessionService{
 
     async createSession(user: User,token: {accessToken: string}){
-        return new sessionDB().addSession(user,token.accessToken);
+        const session = new Session();
+        session.userId = user.userId;
+        session.jwtToken = token.accessToken;
+        return new sessionDB().addSession(session);
     }
+
     async getSession(session: sessionDTO, user: userDTO){
         //Get the session
         const sessiondb = new sessionDB();
@@ -41,7 +46,16 @@ export default class sessionService{
         if(foundSession){
             //See if requesting user has the required rights
             if(user.type === "Admin" ||  foundSession.userId == user.userID){
-                return sessiondb.updateSession(session,{id: session.id});
+
+                if(session.jwtToken != undefined){
+                    foundSession.jwtToken = session.jwtToken;
+                }
+    
+                if(session.valid != undefined){
+                    foundSession.valid = session.valid;
+                } 
+
+                return sessiondb.updateSession(foundSession);
             }
         }else{
             return "Session not found";
@@ -104,45 +118,14 @@ export default class sessionService{
             return false;
         }
         //Validate user login password 
-        const isValid = await this.compareUserPassword(password, user.password);
+        const isValid = await bcrypt.compare(password,user.password).catch((e)=>false);
+        
         //Wrong login password
         if(!isValid){
             return false;
         }
         //User successfully validated, return a user object 
-        return user;// omit(user,"password");
-    }
-
-    async compareUserPassword(candidatePassword:string, userPassword: string){
-        return bcrypt.compare(candidatePassword,userPassword).catch((e)=>false);
-    }
-
-    signJwt(object: Object, options?: jwt.SignOptions | undefined){
-        const privateKey = config.get('security.privateKey') as string;
-        return jwt.sign(object,privateKey,{
-            ...(options && options),
-            algorithm:"RS256"
-        });
-    }
-
-    verifyJwt(token: string){
-        const publicKey = config.get('security.publicKey') as string;
-
-        try{
-            const decoded = jwt.verify(token, publicKey); 
-            return{
-                valid: true,
-                expired: false,
-                decoded,
-            }
-        
-        }catch(e: any){
-            return{
-                valid: false,
-                expired: e.message === "jwt expired",
-                decoded: null
-            }
-        }
+        return user;
     }
 
     async getSessionTokens(validUser : User){
@@ -151,16 +134,14 @@ export default class sessionService{
 
         if(vSesh){
             //Verify if valid session contains valid Jwt token
-            const result = this.verifyJwt(vSesh.jwtToken);
+            const result = new JwtService().verifyJwt(vSesh.jwtToken);
             
             //If expired, invalidate token in DB
             if(result.expired){
-                const sesToUpdate: sessionDTO = {};
-                sesToUpdate.jwtToken = vSesh.jwtToken;
-                sesToUpdate.valid = false;
+                vSesh.valid = false;
 
                 try{
-                    await new sessionDB().updateSession(sesToUpdate,{jwtToken : vSesh.jwtToken});
+                    await new sessionDB().updateSession(vSesh);
                 }catch(e: any){
                     throw new Error(e);
                 }
@@ -175,34 +156,17 @@ export default class sessionService{
 
         //If no existing valid Jwt Tokens, we create new access and session tokens
         //Create access token
-        const accessToken = this.signJwt(userSalt,
+        const accessToken = new JwtService().signJwt(userSalt,
             {expiresIn: config.get('security.accessTokenTtl') }
         );
 
         //Create refresh token
-        const refreshToken = this.signJwt(userSalt,
+        const refreshToken = new JwtService().signJwt(userSalt,
             {expiresIn: config.get('security.refreshTokenTtl') }
         );
 
         return {accessToken, refreshToken,  new: true};
         
-    }
-
-   async reIssueAccessToken(userId: number){
-            
-        //Get the user who holds the session token
-        const user = await new userDB().getUser({userId: userId});
-
-        if(user){
-            const userSalt : userDTO = new userService().toUserDTO(user);
-
-            //Create session token
-            const accessToken = this.signJwt(userSalt,
-                {expiresIn: config.get('security.accessTokenTtl')
-            });
-        
-            return accessToken;
-        }
     }
 
     toSessionDTO(sess: any){

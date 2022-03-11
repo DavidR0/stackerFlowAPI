@@ -8,13 +8,6 @@ import {
 } from "typeorm";
 import { User } from "./User";
 
-export interface sessionDTO{
-  id?: number,
-  jwtToken?: string,
-  valid?: boolean
-  userId?: number,
-};
-
 @Index("session_ID_uindex", ["id"], { unique: true })
 @Index("session_user_User_ID_fk", ["userId"], {})
 @Entity("session", { schema: "stackerflow" })
@@ -32,7 +25,7 @@ export class Session {
   userId: number | null;
 
   @ManyToOne(() => User, (user) => user.sessions, {
-    onDelete: "NO ACTION",
+    onDelete: "CASCADE",
     onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "User_ID", referencedColumnName: "userId" }])

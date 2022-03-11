@@ -7,7 +7,6 @@ import log from "../logger";
 export default class userController{
 
     async createUserHandler(req: Request, res: Response){
-        //transform to userDTO
         try{
             const uService = new userService();
             //Create the user object
@@ -53,6 +52,23 @@ export default class userController{
         }catch(e: any){
             log.error(e);
             return res.send(e.message);
+        }
+    }
+
+    async deleteUserHandler(req: Request, res: Response){
+        try{
+
+            const uService = new userService();
+            const requestingUser = uService.toUserDTO(res.locals.user);
+            const requestedUser = uService.toUserDTO(req.body);
+
+            const rez = await uService.deleteUserById(requestedUser,requestingUser);
+            log.info("Successfully deleted user.")
+            return res.send(rez);
+
+        }catch(e: any){
+            log.error(e);
+            return res.status(404).send(e.message);
         }
     }
 }

@@ -8,8 +8,9 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Answer } from "./Answer";
-import { QuestionTag } from "./QuestionTag";
 import { User } from "./User";
+import { QuestionTag } from "./QuestionTag";
+
 
 @Index("Question_Question_ID_uindex", ["questionId"], { unique: true })
 @Index("question_user_User_ID_fk", ["userId"], {})
@@ -37,27 +38,19 @@ export class Question {
   })
   creationTime: Date | null;
 
-  @Column("tinyint", {
-    name: "Deleted",
-    nullable: true,
-    width: 1,
-    default: () => "'0'",
-  })
-  deleted: boolean | null;
-
   @Column("int", { name: "VoteCount", nullable: true, default: () => "'0'" })
   voteCount: number | null;
 
   @OneToMany(() => Answer, (answer) => answer.question)
   answers: Answer[];
 
-  @OneToMany(() => QuestionTag, (questionTag) => questionTag.question)
-  questionTags: QuestionTag[];
-
   @ManyToOne(() => User, (user) => user.questions, {
-    onDelete: "NO ACTION",
+    onDelete: "CASCADE",
     onUpdate: "NO ACTION",
   })
   @JoinColumn([{ name: "User_ID", referencedColumnName: "userId" }])
   user: User;
+
+  @OneToMany(() => QuestionTag, (questionTag) => questionTag.question)
+  questionTags: QuestionTag[];
 }

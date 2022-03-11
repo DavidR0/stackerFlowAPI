@@ -10,19 +10,6 @@ import { Question } from "./Question";
 import { Session } from "./Session";
 import { Vote } from "./Vote";
 
-export interface userDTO{
-  userName?: string,
-  email?: string,
-  password?: string,
-  type?: "User" | "Admin" ;
-  userID?: number,
-  banned?: boolean
-  twoFact?: boolean,
-  score?: number,
-  privateKey?: string,
-};
-
-
 @Index("User_User_ID_uindex", ["userId"], { unique: true })
 @Index("user_Email_uindex", ["email"], { unique: true })
 @Index("user_UserName_uindex", ["userName"], { unique: true })
