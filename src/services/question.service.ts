@@ -34,6 +34,36 @@ export default class QuestionService{
         return await new QuestionDB().getQuestion({questionId: question.questionId});
     }
 
+    async updateQuestion(question: questionDTO, user: userDTO){
+        const questiondb = new QuestionDB();
+        const questionToUpdatedb = await this.getQuestion(question);
+
+        if(questionToUpdatedb == undefined){
+            throw new Error("Question does not exist");
+        }
+
+        if(user.type =="Admin" || user.userID == questionToUpdatedb.userId){
+
+            if(question.title != undefined){
+                questionToUpdatedb.title = question.title;
+            }
+
+            if(question.content != undefined){
+                questionToUpdatedb.content = question.content;
+            }
+
+            if(question.voteCount != undefined){
+                questionToUpdatedb.voteCount = question.voteCount;
+            }
+
+            return await questiondb.updateQuestion(questionToUpdatedb);
+        }
+
+        throw new Error("User does not have access rights");
+
+
+    }
+
     async deleteQuestion(question: questionDTO, user: userDTO){
 
         const questiondb = new QuestionDB();

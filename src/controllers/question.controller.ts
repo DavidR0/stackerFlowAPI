@@ -27,7 +27,18 @@ export default class QuestionController{
     }
 
     async updateQuestionHandler(req: Request, res: Response){
-        
+        const qService = new QuestionService();
+        const question = qService.toQuestionDTO(req.body);
+        const user = new UserService().toUserDTO(res.locals.user);
+
+        try{
+            const rez = await qService.updateQuestion(question, user);
+            log.info("Successfully updated question.")
+            res.send(rez);
+        }catch(e: any){
+            log.error(e)
+            res.send(e.message);
+        }
     }
 
     async deleteQuestionHandler(req: Request, res: Response){
