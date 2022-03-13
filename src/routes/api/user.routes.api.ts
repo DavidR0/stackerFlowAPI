@@ -2,15 +2,16 @@ import express from "express";
 import userController from "../../controllers/user.controller";
 import validate from "../../middleWare/requestValidator";
 import requireUser from "../../middleWare/requireUser";
-import { createUserSchema, getUpdateUserSchema } from "../../schema/user.schema";
+import UserSchema from "../../schema/user.schema";
 
 const router = express.Router();
 
 const userCtrl = new userController();
+const userSchema = new UserSchema();
 
-router.post("/create",validate(createUserSchema),userCtrl.createUserHandler);
-router.get("/get",[requireUser,validate(getUpdateUserSchema)],userCtrl.getUserHandler);
-router.patch("/update",[requireUser,validate(getUpdateUserSchema)],userCtrl.updateUserHandler);
-router.delete("/delete",[requireUser,validate(getUpdateUserSchema)],userCtrl.deleteUserHandler);
+router.post("/create",validate(userSchema.createUserSchema),userCtrl.createUserHandler);
+router.get("/get",[requireUser,validate(userSchema.getUpdateUserSchema)],userCtrl.getUserHandler);
+router.patch("/update",[requireUser,validate(userSchema.getUpdateUserSchema)],userCtrl.updateUserHandler);
+router.delete("/delete",[requireUser,validate(userSchema.getUpdateUserSchema)],userCtrl.deleteUserHandler);
 
 export default router;

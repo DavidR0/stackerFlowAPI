@@ -13,10 +13,15 @@ export default class QuestionController{
 
         const question = qService.toQuestionDTO(req.body);
         const user = new UserService().toUserDTO(res.locals.user);
-
-        const rez = await qService.createQuestion(question, user);
-        log.info("Successfully created question.")
-        res.send(rez);
+        try{
+            const rez = await qService.createQuestion(question, user);
+            log.info("Successfully created question.")
+            res.send(rez);
+    
+        }catch(e: any){
+            log.error("Failed to create question.")
+            res.send(e.message);
+        }
     }
 
     async getQuestionHandler(req: Request, res: Response){

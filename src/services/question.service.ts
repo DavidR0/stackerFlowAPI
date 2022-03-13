@@ -9,7 +9,7 @@ export default class QuestionService{
     async createQuestion(question: questionDTO, user: userDTO){
 
         const questionDBObj = new Question();
-
+        
         //Setting question info
         if(user.userName != undefined){
             questionDBObj.author = user.userName;
