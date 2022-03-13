@@ -8,8 +8,8 @@ export default class AnswerController{
     async createAnswerHandler(req: Request, res: Response){
         const aService = new AnswerService();
         const answer = aService.toAnswer(req.body);
-        const user = new UserService().toUserDTO(res.locals.user);
-        const question = new QuestionService().toQuestionDTO(req.body);
+        const user = new UserService().toUser(res.locals.user);
+        const question = new QuestionService().toQuestion(req.body);
         try{
             
             const rez = await aService.createAnswer(answer,user,question);
@@ -24,11 +24,10 @@ export default class AnswerController{
     async getAnswerHandler(req: Request, res: Response){
         const aService = new AnswerService();
         const answer = aService.toAnswer(req.body);
-        const user = new UserService().toUserDTO(res.locals.user);
+        const user = new UserService().toUser(res.locals.user);
 
-        //const rez = await aService.getAnswer(answer, user);
-        //res.send(rez);
-
+        const rez = await aService.getAnswer(answer, user);
+        res.send(rez);
     }
 
     async updateAnswerHandler(req: Request, res: Response){

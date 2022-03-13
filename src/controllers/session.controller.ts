@@ -54,8 +54,8 @@ export default class sessionController{
 
     async getSessionhandler(req: Request, res: Response){
 
-        const user = new userService().toUserDTO(res.locals.user);
-        const session = new sessionService().toSessionDTO(req.body);
+        const user = new userService().toUser(res.locals.user);
+        const session = new sessionService().toSession(req.body);
 
         try{
             const sessions = await new sessionService().getSession(session, user);
@@ -68,8 +68,8 @@ export default class sessionController{
 
     async updateSessionHandler(req: Request, res: Response){
 
-        const user = new userService().toUserDTO(res.locals.user);
-        const sessionUpdate = new sessionService().toSessionDTO(req.body);
+        const user = new userService().toUser(res.locals.user);
+        const sessionUpdate = new sessionService().toSession(req.body);
         
         try{
             const sessions = await new sessionService().updateSession(sessionUpdate, user);
@@ -83,13 +83,13 @@ export default class sessionController{
 
     async deleteSessionHandler(req: Request, res: Response){
 
-        const user = new userService().toUserDTO(res.locals.user);
-        const sessionUpdate = new sessionService().toSessionDTO(req.body);
+        const user = new userService().toUser(res.locals.user);
+        const sessionUpdate = new sessionService().toSession(req.body);
         
         try{
-            const sessions = await new sessionService().deleteSession(sessionUpdate, user);
+            const rez = await new sessionService().deleteSession(sessionUpdate, user);
             log.info("Successfuly deleted session");
-            res.send(sessions);
+            res.send(rez);
         }catch(e: any){
             log.error(e);
             return res.status(404).send(e.message);

@@ -17,7 +17,7 @@ const deserializeUser = async (req : Request, res: Response, next: NextFunction)
         return next();
     }
 
-    if(!userId){
+    if(userId == undefined){
         log.info("User has invalid userId.");
         return next();
     }
@@ -26,7 +26,7 @@ const deserializeUser = async (req : Request, res: Response, next: NextFunction)
     const accessRes =  new JwtService().verifyJwt(accessToken)
     //Valid accessToken
     if(accessRes.valid){
-        const id = (<any>accessRes.decoded).userID; 
+        const id = (<any>accessRes.decoded).userId; 
         if(id == userId){
             res.locals.user = accessRes.decoded;
             log.info("User has vaild access token.");
@@ -46,7 +46,7 @@ const deserializeUser = async (req : Request, res: Response, next: NextFunction)
             return next();
         }
 
-        const id = (<any>refResult.decoded).userID;
+        const id = (<any>refResult.decoded).userId;
 
         if(id == userId){
             //refresh token is valid, lets reissue a new access token

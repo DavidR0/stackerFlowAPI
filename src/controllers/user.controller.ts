@@ -10,7 +10,7 @@ export default class userController{
         try{
             const uService = new userService();
             //Create the user object
-            const user = uService.toUserDTO(req.body)
+            const user = uService.toUser(req.body)
             //create user object in db
             await uService.createUser(user);
 
@@ -27,8 +27,8 @@ export default class userController{
         try{
 
             const uService = new userService();
-            const requestingUser = uService.toUserDTO(res.locals.user);
-            const requestedUser = uService.toUserDTO(req.body);
+            const requestingUser = uService.toUser(res.locals.user);
+            const requestedUser = uService.toUser(req.body);
 
             const user = await uService.getUserById(requestedUser,requestingUser);
             log.info("Successfully got user.")
@@ -42,9 +42,9 @@ export default class userController{
 
     async updateUserHandler(req: Request, res: Response){
             const uService = new userService();
-            const userRequestingUpdate = uService.toUserDTO(res.locals.user);
+            const userRequestingUpdate = uService.toUser(res.locals.user);
             //We have the userId due to validator
-            const userToUpdate = uService.toUserDTO(req.body);
+            const userToUpdate = uService.toUser(req.body);
         try{
             await uService.updateUserById(userToUpdate,userRequestingUpdate);
             log.info("Successfully updated user.")
@@ -59,8 +59,8 @@ export default class userController{
         try{
 
             const uService = new userService();
-            const requestingUser = uService.toUserDTO(res.locals.user);
-            const requestedUser = uService.toUserDTO(req.body);
+            const requestingUser = uService.toUser(res.locals.user);
+            const requestedUser = uService.toUser(req.body);
 
             const rez = await uService.deleteUserById(requestedUser,requestingUser);
             log.info("Successfully deleted user.")

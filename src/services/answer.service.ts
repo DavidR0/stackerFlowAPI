@@ -1,23 +1,15 @@
 import AnswerDB from "../db/answer.DB";
 import { Answer } from "../entities/Answer";
+import { Question } from "../entities/Question";
 import { User } from "../entities/User";
-import { questionDTO, userDTO } from "../entities/dto";
 
 export default class AnswerService{
     private aDatabase = new AnswerDB();
 
-    async createAnswer(answer: Answer, user: userDTO, question: questionDTO){
-        if(user.userID){
-            answer.userId = user.userID;
-        }
-
-        if(question.questionId){
-            answer.questionId = question.questionId;
-        }
-
-        if(user.userName){
-            answer.author = user.userName;
-        }
+    async createAnswer(answer: Answer, user: User, question: Question){
+        answer.userId = user.userId;
+        answer.questionId = question.questionId;
+        answer.author = user.userName;
 
         return await this.aDatabase.addAnswer(answer);
     }
@@ -27,7 +19,7 @@ export default class AnswerService{
     }
 
     toAnswer(ans: any): Answer{
-        const answer = new Answer();
+        let answer = new Answer();
 
         if(ans.author){
             answer.author = ans.author;

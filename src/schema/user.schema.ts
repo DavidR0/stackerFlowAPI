@@ -12,7 +12,7 @@ export default class UserSchema{
     
     getUpdateUserSchema = object({
         body: object({
-            userID: number().required("userID is required"),
+            userId: number().required("userId is required"),
         }),
     });
 }

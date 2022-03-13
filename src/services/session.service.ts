@@ -4,48 +4,39 @@ import userDB from "../db/user.DB";
 import bcrypt from "bcrypt"
 import config from 'config'
 import sessionDB from "../db/session.DB";
-import { sessionDTO, userDTO } from "../entities/dto";
 import log from "../logger";
 import userService from "./user.service";
 import { Session } from "../entities/Session";
 import JwtService from "./jwt.service";
+import UserService from "./user.service";
 
 export default class SessionService{
 
-    async createSession(user: User,token: {accessToken: string}){
-        const session = new Session();
-        session.userId = user.userId;
-        session.jwtToken = token.accessToken;
-        return new sessionDB().addSession(session);
-    }
-
-    async getSession(session: sessionDTO, user: userDTO){
+    async getSession(session: Session, user: User){
         //Get the session
         const sessiondb = new sessionDB();
-        const foundSession =  await sessiondb.getOneSession({id: session.id});
+        const foundSession =  await sessiondb.getOneSession(session);
 
         //See if requesting user has the required rights
         if(foundSession){
-            if(user.type === "Admin" ||  foundSession.userId == user.userID){
+            if(user.type === "Admin" ||  foundSession.userId == user.userId){
                 return foundSession;
             }
         }else{
             return "Session not found";
         }
-      
-        
-        throw new Error("User does not have access rights");
-        
+              
+        throw new Error("User does not have access rights");  
     }
 
-    async updateSession(session: sessionDTO, user: userDTO){
+    async updateSession(session: Session, user: User){
         //Get the session
         const sessiondb = new sessionDB();
         const foundSession =  await sessiondb.getOneSession({id: session.id});
 
         if(foundSession){
             //See if requesting user has the required rights
-            if(user.type === "Admin" ||  foundSession.userId == user.userID){
+            if(user.type === "Admin" ||  foundSession.userId == user.userId){
 
                 if(session.jwtToken != undefined){
                     foundSession.jwtToken = session.jwtToken;
@@ -65,23 +56,28 @@ export default class SessionService{
 
     }
 
-    async deleteSession(session: sessionDTO, user: userDTO){
+    async deleteSession(session: Session, user: User){
         //Get the session
         const sessiondb = new sessionDB();
-        const foundSession =  await sessiondb.getOneSession({id: session.id});
+        const foundSession =  await sessiondb.getOneSession(session);
 
         if(foundSession){
             //See if requesting user has the required rights
-            if(user.type === "Admin" ||  foundSession?.userId == user.userID){
-                return sessiondb.deleteSession({id: session.id});
+            if(user.type === "Admin" ||  foundSession?.userId == user.userId){
+                return sessiondb.deleteSession(foundSession);
             }
         }else{
             return "Session not found";
         }
 
-        
         throw new Error("User does not have access rights");
+    }
 
+    async createSession(user: User, token: {accessToken: string}){
+        const session = new Session();
+        session.userId = user.userId;
+        session.jwtToken = token.accessToken;
+        return new sessionDB().addSession(session);
     }
 
     validateTwoFactAuth(user: User, pin : string){
@@ -152,16 +148,18 @@ export default class SessionService{
                 return{refreshToken: vSesh.jwtToken, accessToken:"", new: false};
             }
         }
-        const userSalt : userDTO = new userService().toUserDTO(validUser);
 
         //If no existing valid Jwt Tokens, we create new access and session tokens
+        const salt = new UserService().toUser(validUser);
         //Create access token
-        const accessToken = new JwtService().signJwt(userSalt,
+        const accessToken = new JwtService().signJwt(
+            {...salt},
             {expiresIn: config.get('security.accessTokenTtl') }
         );
 
         //Create refresh token
-        const refreshToken = new JwtService().signJwt(userSalt,
+        const refreshToken = new JwtService().signJwt(
+            {...salt},
             {expiresIn: config.get('security.refreshTokenTtl') }
         );
 
@@ -169,8 +167,8 @@ export default class SessionService{
         
     }
 
-    toSessionDTO(sess: any){
-        const session : sessionDTO = {};
+    toSession(sess: any){
+        const session = new Session();
 
         if(sess.id != undefined){
             session.id = sess.id;

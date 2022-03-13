@@ -11,8 +11,8 @@ export default class QuestionController{
     async createQuestionHandler(req: Request, res: Response){
         const qService = new QuestionService();
 
-        const question = qService.toQuestionDTO(req.body);
-        const user = new UserService().toUserDTO(res.locals.user);
+        const question = qService.toQuestion(req.body);
+        const user = new UserService().toUser(res.locals.user);
         try{
             const rez = await qService.createQuestion(question, user);
             log.info("Successfully created question.")
@@ -26,15 +26,15 @@ export default class QuestionController{
 
     async getQuestionHandler(req: Request, res: Response){
         const qService = new QuestionService();
-        const question = qService.toQuestionDTO(req.body);
+        const question = qService.toQuestion(req.body);
         
         res.send(await qService.getQuestion(question));
     }
 
     async updateQuestionHandler(req: Request, res: Response){
         const qService = new QuestionService();
-        const question = qService.toQuestionDTO(req.body);
-        const user = new UserService().toUserDTO(res.locals.user);
+        const question = qService.toQuestion(req.body);
+        const user = new UserService().toUser(res.locals.user);
 
         try{
             const rez = await qService.updateQuestion(question, user);
@@ -48,8 +48,8 @@ export default class QuestionController{
 
     async deleteQuestionHandler(req: Request, res: Response){
         const qService = new QuestionService();
-        const question = qService.toQuestionDTO(req.body);
-        const user = new UserService().toUserDTO(res.locals.user);
+        const question = qService.toQuestion(req.body);
+        const user = new UserService().toUser(res.locals.user);
 
         try{
             const rez = await qService.deleteQuestion(question, user);

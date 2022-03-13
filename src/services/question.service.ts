@@ -1,48 +1,37 @@
 import QuestionDB from "../db/question.DB";
-import { questionDTO, userDTO } from "../entities/dto";
 import { Question } from "../entities/Question";
+import { User } from "../entities/User";
 
 export default class QuestionService{
 
     private qDatabase = new QuestionDB();
 
-    async createQuestion(question: questionDTO, user: userDTO){
-
-        const questionDBObj = new Question();
-        
+    async createQuestion(question: Question, user: User){
         //Setting question info
         if(user.userName != undefined){
-            questionDBObj.author = user.userName;
+            question.author = user.userName;
         }
 
-        if(question.content != undefined){
-            questionDBObj.content = question.content;
+        if(user.userId != undefined){
+            question.userId = user.userId;
         }
 
-        if(question.title != undefined){
-            questionDBObj.title = question.title;
-        }
-
-        if(user.userID != undefined){
-            questionDBObj.userId = user.userID;
-        }
-
-        return await this.qDatabase.addQuestion(questionDBObj);
+        return await this.qDatabase.addQuestion(question);
     }
 
-    async getQuestion(question: questionDTO){
-        return await new QuestionDB().getQuestion({questionId: question.questionId});
+    async getQuestion(question: Question){
+        return await new QuestionDB().getQuestion(question);
     }
 
-    async updateQuestion(question: questionDTO, user: userDTO){
+    async updateQuestion(question: Question, user: User){
         const questiondb = new QuestionDB();
-        const questionToUpdatedb = await this.getQuestion(question);
+        const questionToUpdatedb = await questiondb.getQuestion({questionId: question.questionId});
 
         if(questionToUpdatedb == undefined){
             throw new Error("Question does not exist");
         }
 
-        if(user.type =="Admin" || user.userID == questionToUpdatedb.userId){
+        if(user.type =="Admin" || user.userId == questionToUpdatedb.userId){
 
             if(question.title != undefined){
                 questionToUpdatedb.title = question.title;
@@ -60,11 +49,9 @@ export default class QuestionService{
         }
 
         throw new Error("User does not have access rights");
-
-
     }
 
-    async deleteQuestion(question: questionDTO, user: userDTO){
+    async deleteQuestion(question: Question, user: User){
 
         const questiondb = new QuestionDB();
         const questionToDeletedb = await this.getQuestion(question);
@@ -73,7 +60,7 @@ export default class QuestionService{
             throw new Error("Question does not exist");
         }
 
-        if(user.type =="Admin" || user.userID == questionToDeletedb.userId){
+        if(user.type =="Admin" || user.userId == questionToDeletedb.userId){
             return await questiondb.deleteQuestion(questionToDeletedb);
         }
 
@@ -81,8 +68,8 @@ export default class QuestionService{
 
     } 
 
-    toQuestionDTO(question: any): questionDTO{
-       const questionObj : questionDTO = {}; 
+    toQuestion(question: any): Question{
+       const questionObj = new Question(); 
 
        if(question.author != undefined){
            questionObj.author = question.author ;

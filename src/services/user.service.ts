@@ -1,4 +1,3 @@
-import { userDTO } from "../entities/dto";
 import speakeasy from "speakeasy"
 import log from "../logger";
 import userDB from "../db/user.DB";
@@ -6,35 +5,26 @@ import bcrypt from "bcrypt"
 import config from "config"
 import { User } from "../entities/User";
 
-
-
 export default class UserService{
  
-    async createUser(user: userDTO) {
+    async createUser(user: User) {
         try{
             if(user.password && user.email && user.userName){
-                const userDbObj = new User();
-                userDbObj.email = user.email;
-                userDbObj.userName = user.userName;
                 //Create two factor auth secret
                 if(user.twoFact) {
                     const twoFactorAuthSecret = speakeasy.generateSecret();
-                    userDbObj.privateKey = twoFactorAuthSecret.base32;  
-                    userDbObj.twoFact = true;  
-                }
-
-                if(user.type != undefined){
-                    userDbObj.type = user.type;
+                    user.privateKey = twoFactorAuthSecret.base32;  
+                    user.twoFact = true;  
                 }
 
                 //Hash the password
                 const salt = await bcrypt.genSalt(config.get('security.saltWorkFactor'));
                 const hash = await bcrypt.hashSync(user.password,salt)  
-                userDbObj.password = hash;
+                user.password = hash;
 
                 //Create the user
                 const uDB = new userDB();
-                await uDB.addUser(userDbObj);
+                await uDB.addUser(user);
             }else{
                 throw new Error("Password, Email and Username is needed.");
             }
@@ -44,27 +34,23 @@ export default class UserService{
         }
     };
 
-    async getUserById(requestedUser: userDTO, requestingUser: userDTO){
-        if(requestingUser.type =="Admin" || requestedUser.userID == requestingUser.userID){
-            const query = {
-                userId: requestedUser.userID
-            };
-            const user = await new userDB().getUser(query);
-            return user;        
+    async getUserById(requestedUser: User, requestingUser: User){
+        if(requestingUser.type =="Admin" || requestedUser.userId == requestingUser.userId){
+            return await new userDB().getUser(requestedUser);
         }
 
         throw new Error("User does not have access rights");
     }
 
-    async updateUserById(userToUpdate: userDTO, userRequestingUpdate: userDTO){
+    async updateUserById(userToUpdate: User, userRequestingUpdate: User){
         const userdb = new userDB();
-        const userToUpdatedb = await userdb.getUser({userId: userToUpdate.userID});
+        const userToUpdatedb = await userdb.getUser({userId: userToUpdate.userId});
 
         if(userToUpdatedb == undefined){
             throw new Error("User does not exist");
         }
 
-        if(userRequestingUpdate.type =="Admin" || userRequestingUpdate.userID == userToUpdate.userID){
+        if(userRequestingUpdate.type =="Admin" || userRequestingUpdate.userId == userToUpdate.userId){
 
             //Check if we are updating the password, if so hash it
             if(userToUpdate.password){
@@ -106,25 +92,25 @@ export default class UserService{
         throw new Error("User does not have access rights");
     }
 
-    async deleteUserById(userToDelete: userDTO, userRequestingDelete: userDTO){
+    async deleteUserById(userToDelete: User, userRequestingDelete: User){
 
         const userdb = new userDB();
-        const userToDeletedb = await userdb.getUser({userId: userToDelete.userID});
+        const userToDeletedb = await userdb.getUser(userToDelete);
 
         if(userToDeletedb == undefined){
             throw new Error("User does not exist");
         }
 
-        if(userRequestingDelete.type =="Admin" || userRequestingDelete.userID == userToDelete.userID){
+        if(userRequestingDelete.type =="Admin" || userRequestingDelete.userId == userToDelete.userId){
             return await new userDB().deleteUser(userToDeletedb);
         }
 
         throw new Error("User does not have access rights");
     }
     
-    toUserDTO(user: any): userDTO{
+    toUser(user: any): User{
 
-        let userObj : userDTO = {};
+        let userObj = new User();
 
         if(user.userName != undefined){
             userObj.userName = user.userName;
@@ -137,13 +123,9 @@ export default class UserService{
         if(user.email != undefined){
             userObj.email = user.email;
         }
-
-        if(user.userID != undefined){
-            userObj.userID = user.userID;
-        }
         
         if(user.userId != undefined){
-            userObj.userID = user.userId;
+            userObj.userId = user.userId;
         }
 
         if(user.type != undefined){

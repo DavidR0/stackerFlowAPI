@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import config from 'config'
-import { userDTO } from "../entities/dto";
 import userDB from "../db/user.DB";
 import UserService from "../services/user.service";
 
@@ -12,10 +11,10 @@ export default class JwtService{
         const user = await new userDB().getUser({userId: userId});
     
         if(user){
-            const userSalt : userDTO = new UserService().toUserDTO(user);
+            const userSalt = new UserService().toUser(user);
     
             //Create session token
-            const accessToken = this.signJwt(userSalt,
+            const accessToken = this.signJwt({...userSalt},
                 {expiresIn: config.get('security.accessTokenTtl')
             });
         
