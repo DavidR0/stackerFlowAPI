@@ -8,9 +8,9 @@ export default class AnswerDB{
         return await answerRepo.save(answer);
     }
 
-    async getAnswer(answer: Answer){
+    async getAnswer(query: any){
         const answerRepo = getRepository(Answer);
-        return await answerRepo.findOne(answer);
+        return await answerRepo.findOne(query);
     }
 
     async updateAnswer(answer: Answer){

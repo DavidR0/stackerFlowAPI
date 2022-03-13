@@ -24,17 +24,38 @@ export default class AnswerController{
     async getAnswerHandler(req: Request, res: Response){
         const aService = new AnswerService();
         const answer = aService.toAnswer(req.body);
-        const user = new UserService().toUser(res.locals.user);
 
-        const rez = await aService.getAnswer(answer, user);
+        const rez = await aService.getAnswer(answer);
         res.send(rez);
     }
 
     async updateAnswerHandler(req: Request, res: Response){
-        res.send();
+        const aService = new AnswerService();
+        const answer = aService.toAnswer(req.body);
+        const user = new UserService().toUser(res.locals.user);
+
+        try{
+            const rez = await aService.updateAnswer(answer, user);
+            log.info("Successfully updated answer.")
+            res.send(rez);
+        }catch(e: any){
+            log.error(e)
+            res.send(e.message);
+        }
     }
 
     async deleteAnswerHandler(req: Request, res: Response){
-        res.send();
+        const aService = new AnswerService();
+        const answer = aService.toAnswer(req.body);
+        const user = new UserService().toUser(res.locals.user);
+
+        try{
+            const rez = await aService.deleteAnswer(answer, user);
+            log.info("Successfully deleted answer.")
+            res.send(rez);
+        }catch(e: any){
+            log.error(e)
+            res.send(e.message);
+        }
     }
 }

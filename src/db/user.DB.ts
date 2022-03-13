@@ -1,14 +1,11 @@
 import { User } from "../entities/User";
-import { dbConnection } from "./connectionDB";
 import {getRepository} from "typeorm";
 
 export default class UserDB{
     
     async addUser(user: User){
-        //Get connection instance
-        const db = dbConnection.getInstance();
-        const connection = db.getDBConnection();
-        return await connection.manager.save(user);
+        const userRepository = getRepository(User);
+        return await userRepository.save(user);
     }
 
     async getUser(query: any){

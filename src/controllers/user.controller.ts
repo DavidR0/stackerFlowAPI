@@ -9,11 +9,9 @@ export default class userController{
     async createUserHandler(req: Request, res: Response){
         try{
             const uService = new userService();
-            //Create the user object
             const user = uService.toUser(req.body)
-            //create user object in db
-            await uService.createUser(user);
 
+            await uService.createUser(user);
             log.info("Successfully created user.")
             return res.send(omit(user,"password"));
 

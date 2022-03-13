@@ -14,9 +14,47 @@ export default class AnswerService{
         return await this.aDatabase.addAnswer(answer);
     }
 
-    async getAnswer(answer: Answer, user: User){
+    async getAnswer(answer: Answer){
         return await this.aDatabase.getAnswer(answer);
     }
+
+    async updateAnswer(answer: Answer, user: User){
+        const answerToUpdatedb = await this.aDatabase.getAnswer({answerId: answer.answerId});
+
+        if(answerToUpdatedb == undefined){
+            throw new Error("Answer does not exist");
+        }
+
+        if(user.type =="Admin" || user.userId == answerToUpdatedb.userId){
+
+            if(answer.content != undefined){
+                answerToUpdatedb.content = answer.content;
+            }
+
+            if(answer.voteCount != undefined){
+                answerToUpdatedb.voteCount = answer.voteCount;
+            }
+
+            return await this.aDatabase.updateAnswer(answerToUpdatedb);
+        }
+
+        throw new Error("User does not have access rights");
+    }
+
+    async deleteAnswer(answer: Answer, user: User){
+        const answerToUpdatedb = await this.aDatabase.getAnswer({answerId: answer.answerId});
+
+        if(answerToUpdatedb == undefined){
+            throw new Error("Answer does not exist");
+        }
+
+        if(user.type =="Admin" || user.userId == answerToUpdatedb.userId){
+            return await this.aDatabase.deleteAnswer(answerToUpdatedb);
+        }
+
+        throw new Error("User does not have access rights");
+    }
+
 
     toAnswer(ans: any): Answer{
         let answer = new Answer();

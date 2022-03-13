@@ -20,12 +20,11 @@ export default class QuestionService{
     }
 
     async getQuestion(question: Question){
-        return await new QuestionDB().getQuestion(question);
+        return await this.qDatabase.getQuestion(question);
     }
 
     async updateQuestion(question: Question, user: User){
-        const questiondb = new QuestionDB();
-        const questionToUpdatedb = await questiondb.getQuestion({questionId: question.questionId});
+        const questionToUpdatedb = await this.qDatabase.getQuestion({questionId: question.questionId});
 
         if(questionToUpdatedb == undefined){
             throw new Error("Question does not exist");
@@ -45,15 +44,13 @@ export default class QuestionService{
                 questionToUpdatedb.voteCount = question.voteCount;
             }
 
-            return await questiondb.updateQuestion(questionToUpdatedb);
+            return await this.qDatabase.updateQuestion(questionToUpdatedb);
         }
 
         throw new Error("User does not have access rights");
     }
 
     async deleteQuestion(question: Question, user: User){
-
-        const questiondb = new QuestionDB();
         const questionToDeletedb = await this.getQuestion(question);
 
         if(questionToDeletedb == undefined){
@@ -61,7 +58,7 @@ export default class QuestionService{
         }
 
         if(user.type =="Admin" || user.userId == questionToDeletedb.userId){
-            return await questiondb.deleteQuestion(questionToDeletedb);
+            return await this.qDatabase.deleteQuestion(questionToDeletedb);
         }
 
         throw new Error("User does not have access rights");
