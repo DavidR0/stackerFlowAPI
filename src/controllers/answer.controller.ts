@@ -10,6 +10,7 @@ export default class AnswerController{
         const answer = aService.toAnswer(req.body);
         const user = new UserService().toUser(res.locals.user);
         const question = new QuestionService().toQuestion(req.body);
+        
         try{
             
             const rez = await aService.createAnswer(answer,user,question);

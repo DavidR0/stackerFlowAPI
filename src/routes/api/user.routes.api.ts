@@ -1,12 +1,12 @@
 import express from "express";
-import userController from "../../controllers/user.controller";
+import UserController from "../../controllers/user.controller";
 import validate from "../../middleWare/requestValidator";
 import requireUser from "../../middleWare/requireUser";
 import UserSchema from "../../schema/user.schema";
 
 const router = express.Router();
 
-const userCtrl = new userController();
+const userCtrl = new UserController();
 const userSchema = new UserSchema();
 
 router.post("/create",validate(userSchema.createUserSchema),userCtrl.createUserHandler);

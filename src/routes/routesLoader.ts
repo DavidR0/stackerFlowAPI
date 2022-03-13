@@ -4,6 +4,7 @@ import sessionApi from './api/session.routes.api'
 import requireUser from "../middleWare/requireUser";
 import questionApi from './api/question.routes.api'
 import answerApi from './api/answer.routes.api'
+import tagApi from './api/tag.routes.api'
 
 export default function routesLoader(app: Express){
     //user api
@@ -14,5 +15,6 @@ export default function routesLoader(app: Express){
     app.use('/api/question', requireUser, questionApi);
     //answer api
     app.use('/api/answer', requireUser, answerApi);
-
+    //tag api
+    app.use('/api/tag', requireUser, tagApi);
 }

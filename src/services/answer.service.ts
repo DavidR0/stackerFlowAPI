@@ -42,14 +42,14 @@ export default class AnswerService{
     }
 
     async deleteAnswer(answer: Answer, user: User){
-        const answerToUpdatedb = await this.aDatabase.getAnswer({answerId: answer.answerId});
+        const answerToDeletedb = await this.aDatabase.getAnswer(answer);
 
-        if(answerToUpdatedb == undefined){
+        if(answerToDeletedb == undefined){
             throw new Error("Answer does not exist");
         }
 
-        if(user.type =="Admin" || user.userId == answerToUpdatedb.userId){
-            return await this.aDatabase.deleteAnswer(answerToUpdatedb);
+        if(user.type =="Admin" || user.userId == answerToDeletedb.userId){
+            return await this.aDatabase.deleteAnswer(answerToDeletedb);
         }
 
         throw new Error("User does not have access rights");
@@ -59,31 +59,31 @@ export default class AnswerService{
     toAnswer(ans: any): Answer{
         let answer = new Answer();
 
-        if(ans.author){
+        if(ans.author != undefined){
             answer.author = ans.author;
         }
 
-        if(ans.content){
+        if(ans.content != undefined){
             answer.content = ans.content;
         }
 
-        if(ans.questionId){
+        if(ans.questionId != undefined){
             answer.questionId = ans.questionId;
         }
 
-        if(ans.voteCount){
+        if(ans.voteCount != undefined){
             answer.voteCount = ans.voteCount;
         }
 
-        if(ans.creationTime){
+        if(ans.creationTime != undefined){
             answer.creationTime = ans.creationTime;
         }
 
-        if(ans.answerId){
+        if(ans.answerId != undefined){
             answer.answerId = ans.answerId;
         }
 
-        if(ans.userId){
+        if(ans.userId != undefined){
             answer.userId = ans.userId;
         }
 

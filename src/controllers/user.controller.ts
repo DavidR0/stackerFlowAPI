@@ -4,7 +4,7 @@ import {omit} from 'lodash'
 import log from "../logger";
 
 
-export default class userController{
+export default class UserController{
 
     async createUserHandler(req: Request, res: Response){
         try{
