@@ -50,7 +50,7 @@ export default class TagService{
             tag.tagId = obj.tagId;
         }
 
-        if(obj.tag){
+        if(obj.tag != undefined){
             tag.tag = obj.tag;
         }
 

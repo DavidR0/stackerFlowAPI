@@ -68,7 +68,7 @@ export default class QTagService{
             qtag.questionId = obj.questionId;
         }
 
-        if(obj.id){
+        if(obj.id != undefined){
             qtag.id = obj.id;
         }
 

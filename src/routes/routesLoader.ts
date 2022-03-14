@@ -6,6 +6,7 @@ import questionApi from './api/question.routes.api'
 import answerApi from './api/answer.routes.api'
 import tagApi from './api/tag.routes.api'
 import qTag from './api/qTag.routes.api'
+import vote from './api/vote.routes.api'
 
 export default function routesLoader(app: Express){
     //user api
@@ -20,4 +21,6 @@ export default function routesLoader(app: Express){
     app.use('/api/tag', requireUser, tagApi);
     //qTag api
     app.use('/api/qTag', requireUser, qTag);
+    //vote api
+    app.use('/api/vote', requireUser, vote);
 }
