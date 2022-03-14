@@ -7,9 +7,10 @@ export default class QuestionTagController{
     async createQTagHandler(req: Request, res: Response){
         const tService = new QTagService();
         const qtag = tService.toQTag(req.body);
+        const user = new UserService().toUser(res.locals.user);
         
         try{
-            res.send(await tService.createQTag(qtag));
+            res.send(await tService.createQTag(user, qtag));
         }catch(e: any){
             log.error(e)
             res.send(e.message);

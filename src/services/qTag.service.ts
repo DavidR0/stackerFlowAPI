@@ -8,8 +8,15 @@ export default class QTagService{
 
     private tDataBase = new QTagDB();
 
-    async createQTag(qtag: QuestionTag){
-        return await this.tDataBase.addQTag(qtag);
+    async createQTag(user:User, qtag: QuestionTag){
+        const question = await new QuestionDB().getQuestion({questionId: qtag.questionId});
+
+        //Only admin or question owner can add tags
+        if(user.type =="Admin" || question?.userId == user.userId){
+            return await this.tDataBase.addQTag(qtag);
+        }
+
+        throw new Error("User does not have access rights");
     }
 
     async getQTag(qtag: QuestionTag){

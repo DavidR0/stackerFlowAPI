@@ -22,7 +22,7 @@ export default class VoteService{
             throw new Error("Vote does not exist");
         }
 
-        if(user.type =="Admin" || vote.userId == user.userId){
+        if(user.type =="Admin" || itemToUpdate.userId == user.userId){
 
             if(vote.itemType != undefined){
                 itemToUpdate.itemType = vote.itemType;
@@ -51,7 +51,7 @@ export default class VoteService{
             throw new Error("Vote does not exist");
         }
 
-        if(user.type =="Admin" || vote.userId == user.userId){
+        if(user.type =="Admin" || itemToDelete.userId == user.userId){
             return await this.vDataBase.deleteVote(itemToDelete);
         }
 

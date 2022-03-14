@@ -73,11 +73,80 @@ export default class SessionService{
         throw new Error("User does not have access rights");
     }
 
-    async createSession(user: User, token: {accessToken: string}){
-        const session = new Session();
-        session.userId = user.userId;
-        session.jwtToken = token.accessToken;
-        return new sessionDB().addSession(session);
+    async createSession(user: User, TwoFactPin: string){
+        //Find the user, by email
+        const query = {
+            email: user.email
+        };
+        const foundUser = await new userDB().getUser(query);
+
+        //If user does not exist
+        if(!foundUser){
+            return {
+                status: 404,
+                payload: "User does not exist."
+            };
+        }
+        //Validate user login password 
+        const isValid = await bcrypt.compare(user.password,foundUser.password).catch((e)=>false);
+        
+        //Wrong login password
+        if(!isValid){
+            log.error("Login information invalid.");
+            return {
+                status: 401,
+                payload: "Login information invalid."
+            };
+        }
+
+        //User email and password successfully validated
+        
+        //Check if user is banned
+        if(foundUser.banned){
+            log.error("User is banned.");
+            return {
+                status: 403,
+                payload: "User is banned."
+            };
+        }
+
+        //TwoFactor Auth check
+        if(!this.validateTwoFactAuth(foundUser, TwoFactPin)){
+            log.error("Two factor authentication failed");
+            return {
+                status: 401,
+                payload: "Two factor authentication failed."
+            };
+        }
+        
+        try{
+            //Get access and session tokens
+            const tokens = await this.getSessionTokens(foundUser);
+
+            //If new session tokens were created save them in db
+            if(tokens.new){
+                const session = new Session();
+                session.userId = foundUser.userId;
+                session.jwtToken = tokens.refreshToken;
+                new sessionDB().addSession(session);
+            }
+
+            log.info("Successfully created session.")
+            //Send created session tokens
+            return {
+                payload:{
+                    userId: foundUser.userId ,
+                    refreshToken: tokens.refreshToken,
+                    accessToken: tokens.accessToken},
+                status: 200
+            }; 
+        }catch(e: any){
+            log.error(e);
+            return {
+                status: 401,
+                payload: e.message
+            };
+        }
     }
 
     validateTwoFactAuth(user: User, pin : string){
@@ -102,26 +171,26 @@ export default class SessionService{
         return false; 
     }
 
-    async validateUser({email, password} : {email : string, password: string}){
+    async validateUser(user: User){
         //Find the user, by email
         const query = {
-            email
+            email: user.email
         };
-        const user = await new userDB().getUser(query);
+        const foundUser = await new userDB().getUser(query);
 
         //If user does not exist
-        if(!user){
+        if(!foundUser){
             return false;
         }
         //Validate user login password 
-        const isValid = await bcrypt.compare(password,user.password).catch((e)=>false);
+        const isValid = await bcrypt.compare(user.password,foundUser.password).catch((e)=>false);
         
         //Wrong login password
         if(!isValid){
             return false;
         }
         //User successfully validated, return a user object 
-        return user;
+        return foundUser;
     }
 
     async getSessionTokens(validUser : User){
