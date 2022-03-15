@@ -1,10 +1,10 @@
-import QuestionService from "../services/question.service"
-import UserService from "../services/user.service";
+import {QuestionService} from "../services/question.service"
+import {UserService} from "../services/user.service";
 import {Request, Response} from "express";
 import log from "../logger";
 
 
-export default class QuestionController{
+export class QuestionController{
 
     protected uService = new UserService();
 

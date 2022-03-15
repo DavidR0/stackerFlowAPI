@@ -1,6 +1,6 @@
-import { object, string, ref, number } from "yup";
+import { object, string, number } from "yup";
 
-export default class VoteSchema{
+export class VoteSchema{
     createVoteSchema = object({
         body: object({
             voteType: string().required("voteType is required"),

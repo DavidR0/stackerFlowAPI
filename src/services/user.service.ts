@@ -1,11 +1,11 @@
 import speakeasy from "speakeasy"
 import log from "../logger";
-import userDB from "../db/user.DB";
+import {UserDB} from "../db/user.DB";
 import bcrypt from "bcrypt"
 import config from "config"
 import { User } from "../entities/User";
 
-export default class UserService{
+export class UserService{
  
     async createUser(user: User) {
         try{
@@ -23,7 +23,7 @@ export default class UserService{
                 user.password = hash;
 
                 //Create the user
-                const uDB = new userDB();
+                const uDB = new UserDB();
                 await uDB.addUser(user);
             }else{
                 throw new Error("Password, Email and Username is needed.");
@@ -36,14 +36,14 @@ export default class UserService{
 
     async getUserById(requestedUser: User, requestingUser: User){
         if(requestingUser.type =="Admin" || requestedUser.userId == requestingUser.userId){
-            return await new userDB().getUser(requestedUser);
+            return await new UserDB().getUser(requestedUser);
         }
 
         throw new Error("User does not have access rights");
     }
 
     async updateUserById(userToUpdate: User, userRequestingUpdate: User){
-        const userdb = new userDB();
+        const userdb = new UserDB();
         const userToUpdatedb = await userdb.getUser({userId: userToUpdate.userId});
 
         if(userToUpdatedb == undefined){
@@ -86,7 +86,7 @@ export default class UserService{
                 userToUpdatedb.twoFact = userToUpdate.twoFact;
             }
 
-            return await new userDB().updateUser(userToUpdatedb);
+            return await new UserDB().updateUser(userToUpdatedb);
         }
 
         throw new Error("User does not have access rights");
@@ -94,7 +94,7 @@ export default class UserService{
 
     async deleteUserById(userToDelete: User, userRequestingDelete: User){
 
-        const userdb = new userDB();
+        const userdb = new UserDB();
         const userToDeletedb = await userdb.getUser(userToDelete);
 
         if(userToDeletedb == undefined){
@@ -102,7 +102,7 @@ export default class UserService{
         }
 
         if(userRequestingDelete.type =="Admin" || userRequestingDelete.userId == userToDelete.userId){
-            return await new userDB().deleteUser(userToDeletedb);
+            return await new UserDB().deleteUser(userToDeletedb);
         }
 
         throw new Error("User does not have access rights");

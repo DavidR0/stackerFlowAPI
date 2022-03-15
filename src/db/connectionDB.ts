@@ -11,7 +11,7 @@ export class dbConnection{
             await createConnection();
             log.info("Connected to database.");
         }catch(e){
-            log.error(e);
+            log.error(e); 
         }
     }
 

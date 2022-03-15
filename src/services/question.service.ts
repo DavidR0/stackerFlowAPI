@@ -1,8 +1,8 @@
-import QuestionDB from "../db/question.DB";
+import {QuestionDB} from "../db/question.DB";
 import { Question } from "../entities/Question";
 import { User } from "../entities/User";
 
-export default class QuestionService{
+export class QuestionService{
 
     private qDatabase = new QuestionDB();
 

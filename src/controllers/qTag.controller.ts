@@ -1,9 +1,9 @@
 import {Request, Response} from "express";
-import QTagService from "../services/qTag.service";
+import {QTagService} from "../services/qTag.service";
 import log from "../logger";
-import UserService from "../services/user.service";
+import {UserService} from "../services/user.service";
 
-export default class QuestionTagController{
+export class QuestionTagController{
     async createQTagHandler(req: Request, res: Response){
         const tService = new QTagService();
         const qtag = tService.toQTag(req.body);

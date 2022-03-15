@@ -1,7 +1,7 @@
 import { User } from "../entities/User";
 import {getRepository} from "typeorm";
 
-export default class UserDB{
+export class UserDB{
     
     async addUser(user: User){
         const userRepository = getRepository(User);

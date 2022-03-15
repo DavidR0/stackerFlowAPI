@@ -1,6 +1,6 @@
-import { object, string, ref, number } from "yup";
+import { object, string, number } from "yup";
 
-export default class UserSchema{
+export class UserSchema{
     createUserSchema = object({
         body: object({
             userName: string().required("userName is required"),

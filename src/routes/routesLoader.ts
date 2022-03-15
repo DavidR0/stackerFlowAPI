@@ -8,7 +8,7 @@ import tagApi from './api/tag.routes.api'
 import qTag from './api/qTag.routes.api'
 import vote from './api/vote.routes.api'
 
-export default function routesLoader(app: Express){
+export function routesLoader(app: Express){
     //user api
     app.use('/api/user', usersApi);
     //session api

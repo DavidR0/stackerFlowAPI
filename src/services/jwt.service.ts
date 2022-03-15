@@ -1,14 +1,14 @@
 import jwt from "jsonwebtoken";
 import config from 'config'
-import userDB from "../db/user.DB";
-import UserService from "../services/user.service";
+import {UserDB} from "../db/user.DB";
+import {UserService} from "../services/user.service";
 
-export default class JwtService{
+export class JwtService{
 
     async reIssueJwt(userId: number){
             
         //Get the user who holds the session token
-        const user = await new userDB().getUser({userId: userId});
+        const user = await new UserDB().getUser({userId: userId});
     
         if(user){
             const userSalt = new UserService().toUser(user);

@@ -1,6 +1,6 @@
-import { object, string, ref, number } from "yup";
+import { object, string, number } from "yup";
 
-export default class TagSchema{
+export class TagSchema{
     createTagSchema = object({
         body: object({
             tag: string().required("tag is required"),

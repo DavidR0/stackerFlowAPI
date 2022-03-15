@@ -1,10 +1,9 @@
-import QTagDB from "../db/QTag.DB";
-import QuestionDB from "../db/question.DB";
-
+import {QTagDB} from "../db/QTag.DB";
+import {QuestionDB} from "../db/question.DB";
 import { QuestionTag } from "../entities/QuestionTag";
 import { User } from "../entities/User";
 
-export default class QTagService{
+export class QTagService{
 
     private tDataBase = new QTagDB();
 

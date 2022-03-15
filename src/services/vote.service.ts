@@ -1,8 +1,8 @@
-import VoteDB from "../db/vote.DB";
+import {VoteDB} from "../db/vote.DB";
 import { Vote } from "../entities/Vote";
 import { User } from "../entities/User";
 
-export default class VoteService{
+export class VoteService{
 
     private vDataBase = new VoteDB();
 

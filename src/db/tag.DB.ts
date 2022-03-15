@@ -1,7 +1,7 @@
 import { getRepository } from "typeorm";
 import { Tag } from "../entities/Tag";
 
-export default class TagDB{
+export class TagDB{
     
     async addTag(tag: Tag){
         const Repo = getRepository(Tag);

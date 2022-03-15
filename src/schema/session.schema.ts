@@ -1,6 +1,6 @@
-import { object, string, ref, number, boolean } from "yup";
+import { object, string, number} from "yup";
 
-export default class SessionSchema{
+export class SessionSchema{
 
     createSessionSchema = object({
         body: object({

@@ -1,12 +1,12 @@
-import sessionService from "../services/session.service";
+import {SessionService} from "../services/session.service";
 import {Request, Response} from "express";
 import log from "../logger";
-import UserService from "../services/user.service";
+import {UserService} from "../services/user.service";
 
-export default class sessionController{
+export class SessionController{
 
     async createSessionHandler(req: Request, res: Response){
-        const sService = new sessionService();
+        const sService = new SessionService();
 
         //Email and password is given by validator
         const user = new UserService().toUser(req.body);
@@ -19,10 +19,10 @@ export default class sessionController{
     async getSessionhandler(req: Request, res: Response){
 
         const user = new UserService().toUser(res.locals.user);
-        const session = new sessionService().toSession(req.body);
+        const session = new SessionService().toSession(req.body);
 
         try{
-            const sessions = await new sessionService().getSession(session, user);
+            const sessions = await new SessionService().getSession(session, user);
             res.send(sessions);
         }catch(e: any){
             log.error(e);
@@ -33,10 +33,10 @@ export default class sessionController{
     async updateSessionHandler(req: Request, res: Response){
 
         const user = new UserService().toUser(res.locals.user);
-        const sessionUpdate = new sessionService().toSession(req.body);
+        const sessionUpdate = new SessionService().toSession(req.body);
         
         try{
-            const sessions = await new sessionService().updateSession(sessionUpdate, user);
+            const sessions = await new SessionService().updateSession(sessionUpdate, user);
             log.info("Successfuly updated session");
             res.send(sessions);
         }catch(e: any){
@@ -48,10 +48,10 @@ export default class sessionController{
     async deleteSessionHandler(req: Request, res: Response){
 
         const user = new UserService().toUser(res.locals.user);
-        const sessionUpdate = new sessionService().toSession(req.body);
+        const sessionUpdate = new SessionService().toSession(req.body);
         
         try{
-            const rez = await new sessionService().deleteSession(sessionUpdate, user);
+            const rez = await new SessionService().deleteSession(sessionUpdate, user);
             log.info("Successfuly deleted session");
             res.send(rez);
         }catch(e: any){

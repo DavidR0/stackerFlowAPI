@@ -1,10 +1,10 @@
-import AnswerService from "../services/answer.service";
-import QuestionService from "../services/question.service"
-import UserService from "../services/user.service";
+import {AnswerService} from "../services/answer.service";
+import {QuestionService} from "../services/question.service"
+import {UserService} from "../services/user.service";
 import {Request, Response} from "express";
 import log from "../logger";
 
-export default class AnswerController{
+export class AnswerController{
     async createAnswerHandler(req: Request, res: Response){
         const aService = new AnswerService();
         const answer = aService.toAnswer(req.body);

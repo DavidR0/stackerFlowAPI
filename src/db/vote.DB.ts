@@ -1,7 +1,7 @@
 import { getRepository } from "typeorm";
 import { Vote } from "../entities/Vote";
 
-export default class TagDB{
+export class VoteDB{
     
     async addVote(vote: Vote){
         const Repo = getRepository(Vote);

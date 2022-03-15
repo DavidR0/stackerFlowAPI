@@ -1,6 +1,6 @@
 import { object,  number } from "yup";
 
-export default class QTagSchema{
+export class QTagSchema{
     createQTagSchema = object({
         body: object({
             tagId: number().required("tagId is required"),

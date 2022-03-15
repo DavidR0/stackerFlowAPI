@@ -1,10 +1,10 @@
 import {Request, Response} from "express";
-import UserService from "../services/user.service";
-import TagService from "../services/tag.service";
+import {UserService} from "../services/user.service";
+import {TagService} from "../services/tag.service";
 import log from "../logger";
 
 
-export default class TagController{
+export class TagController{
 
     async createTagHandler(req: Request, res: Response){
         const tService = new TagService();

@@ -1,7 +1,7 @@
 import {Request, Response, NextFunction } from "express";
 import {get} from "lodash"
 import log from "../logger";
-import JwtService from "../services/jwt.service";
+import {JwtService} from "../services/jwt.service";
 
 
 //NOTE: For auth 2.0, the client must send only the access token, only if the sent 

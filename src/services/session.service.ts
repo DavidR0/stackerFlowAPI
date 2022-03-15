@@ -1,20 +1,19 @@
 import speakeasy from "speakeasy"
 import { User} from "../entities/User";
-import userDB from "../db/user.DB";
+import {UserDB} from "../db/user.DB";
 import bcrypt from "bcrypt"
 import config from 'config'
-import sessionDB from "../db/session.DB";
+import {SessionDB} from "../db/session.DB";
 import log from "../logger";
-import userService from "./user.service";
 import { Session } from "../entities/Session";
-import JwtService from "./jwt.service";
-import UserService from "./user.service";
+import {JwtService} from "./jwt.service";
+import {UserService} from "./user.service";
 
-export default class SessionService{
+export class SessionService{
 
     async getSession(session: Session, user: User){
         //Get the session
-        const sessiondb = new sessionDB();
+        const sessiondb = new SessionDB();
         const foundSession =  await sessiondb.getOneSession(session);
 
         //See if requesting user has the required rights
@@ -31,7 +30,7 @@ export default class SessionService{
 
     async updateSession(session: Session, user: User){
         //Get the session
-        const sessiondb = new sessionDB();
+        const sessiondb = new SessionDB();
         const foundSession =  await sessiondb.getOneSession({id: session.id});
 
         if(foundSession){
@@ -58,7 +57,7 @@ export default class SessionService{
 
     async deleteSession(session: Session, user: User){
         //Get the session
-        const sessiondb = new sessionDB();
+        const sessiondb = new SessionDB();
         const foundSession =  await sessiondb.getOneSession(session);
 
         if(foundSession){
@@ -78,7 +77,7 @@ export default class SessionService{
         const query = {
             email: user.email
         };
-        const foundUser = await new userDB().getUser(query);
+        const foundUser = await new UserDB().getUser(query);
 
         //If user does not exist
         if(!foundUser){
@@ -128,7 +127,7 @@ export default class SessionService{
                 const session = new Session();
                 session.userId = foundUser.userId;
                 session.jwtToken = tokens.refreshToken;
-                new sessionDB().addSession(session);
+                new SessionDB().addSession(session);
             }
 
             log.info("Successfully created session.")
@@ -176,7 +175,7 @@ export default class SessionService{
         const query = {
             email: user.email
         };
-        const foundUser = await new userDB().getUser(query);
+        const foundUser = await new UserDB().getUser(query);
 
         //If user does not exist
         if(!foundUser){
@@ -195,7 +194,7 @@ export default class SessionService{
 
     async getSessionTokens(validUser : User){
         //Check if valid session exists
-        let vSesh = await new sessionDB().getOneSession({userId: validUser.userId, valid: true});
+        let vSesh = await new SessionDB().getOneSession({userId: validUser.userId, valid: true});
 
         if(vSesh){
             //Verify if valid session contains valid Jwt token
@@ -206,7 +205,7 @@ export default class SessionService{
                 vSesh.valid = false;
 
                 try{
-                    await new sessionDB().updateSession(vSesh);
+                    await new SessionDB().updateSession(vSesh);
                 }catch(e: any){
                     throw new Error(e);
                 }

@@ -1,7 +1,7 @@
 import { getRepository } from "typeorm";
 import { QuestionTag } from "../entities/QuestionTag";
 
-export default class QTagDB{
+export class QTagDB{
     
     async addQTag(qtag: QuestionTag){
         const Repo = getRepository(QuestionTag);

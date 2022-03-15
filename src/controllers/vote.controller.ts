@@ -1,9 +1,9 @@
 import {Request, Response} from "express";
-import UserService from "../services/user.service";
+import {UserService} from "../services/user.service";
 import log from "../logger";
-import VoteService from "../services/vote.service";
+import {VoteService} from "../services/vote.service";
 
-export default class TagController{
+export class VoteController{
 
     async createVoteHandler(req: Request, res: Response){
         const vService = new VoteService();

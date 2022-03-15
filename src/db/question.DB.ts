@@ -1,7 +1,7 @@
 import { getRepository } from "typeorm";
 import { Question } from "../entities/Question";
 
-export default class QuestionDB{
+export class QuestionDB{
 
     async addQuestion(question: Question){
         const questionRepo = getRepository(Question);

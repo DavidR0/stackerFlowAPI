@@ -1,7 +1,7 @@
 import {getRepository} from "typeorm";
 import { Session } from "../entities/Session";
 
-export default class sessionDB{
+export class SessionDB{
     
     async addSession(session: Session){
         const sessionRepository = getRepository(Session);

@@ -1,9 +1,9 @@
-import AnswerDB from "../db/answer.DB";
+import {AnswerDB} from "../db/answer.DB";
 import { Answer } from "../entities/Answer";
 import { Question } from "../entities/Question";
 import { User } from "../entities/User";
 
-export default class AnswerService{
+export class AnswerService{
     private aDatabase = new AnswerDB();
 
     async createAnswer(answer: Answer, user: User, question: Question){

@@ -1,8 +1,8 @@
-import TagDB from "../db/tag.DB";
+import {TagDB} from "../db/tag.DB";
 import { Tag } from "../entities/Tag";
 import { User } from "../entities/User";
 
-export default class TagService{
+export class TagService{
 
     private tDataBase = new TagDB();
 

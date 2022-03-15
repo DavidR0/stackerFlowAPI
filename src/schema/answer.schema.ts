@@ -1,6 +1,6 @@
-import {object, string, ref, number, boolean} from 'yup'
+import {object, string} from 'yup'
 
-export default class AnswerSchema{
+export class AnswerSchema{
 
     createAnswerSchema = object({
         body: object({

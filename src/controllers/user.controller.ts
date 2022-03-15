@@ -1,14 +1,14 @@
 import {Request, Response} from "express";
-import userService from "../services/user.service";
+import {UserService} from "../services/user.service";
 import {omit} from 'lodash'
 import log from "../logger";
 
 
-export default class UserController{
+export class UserController{
 
     async createUserHandler(req: Request, res: Response){
         try{
-            const uService = new userService();
+            const uService = new UserService();
             const user = uService.toUser(req.body)
 
             await uService.createUser(user);
@@ -24,7 +24,7 @@ export default class UserController{
     async getUserHandler(req: Request, res: Response){
         try{
 
-            const uService = new userService();
+            const uService = new UserService();
             const requestingUser = uService.toUser(res.locals.user);
             const requestedUser = uService.toUser(req.body);
 
@@ -39,7 +39,7 @@ export default class UserController{
     }
 
     async updateUserHandler(req: Request, res: Response){
-            const uService = new userService();
+            const uService = new UserService();
             const userRequestingUpdate = uService.toUser(res.locals.user);
             //We have the userId due to validator
             const userToUpdate = uService.toUser(req.body);
@@ -56,7 +56,7 @@ export default class UserController{
     async deleteUserHandler(req: Request, res: Response){
         try{
 
-            const uService = new userService();
+            const uService = new UserService();
             const requestingUser = uService.toUser(res.locals.user);
             const requestedUser = uService.toUser(req.body);
 
