@@ -1,0 +1,1283 @@
+{
+	"info": {
+		"_postman_id": "dea27fcc-0fba-4a2d-a1af-70da54ea0942",
+		"name": "StackerFlow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "API",
+			"item": [
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "createUser",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"test2@example.com\",\r\n    \"password\": \"password\",\r\n    \"userName\": \"test2\",\r\n    \"twoFact\":\"true\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/user/create",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getUser",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userId\":\"28\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/user/get",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"get"
+									],
+									"query": [
+										{
+											"key": "userId",
+											"value": "1",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateUser",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userId\":\"26\",\r\n    \"userName\": \"lol\",\r\n    \"password\": \"password\",\r\n    \"banned\": \"1\",\r\n    \"type\": \"Admin\",\r\n    \"privateKey\": \"placeholder\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/user/update",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteUser",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userId\":\"26\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/user/delete",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"user",
+										"delete"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Session",
+					"item": [
+						{
+							"name": "createSession",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);\r",
+											"\r",
+											"pm.collectionVariables.set(\"refreshToken\", jsonData.refreshToken);\r",
+											"pm.collectionVariables.set(\"userId\", jsonData.userId);\r",
+											"\r",
+											"\r",
+											"if(jsonData.accessToken != ''){\r",
+											"    pm.collectionVariables.set(\"accessToken\", jsonData.accessToken);\r",
+											"    console.log(jsonData)\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "\r\n{\r\n\"email\": \"{{email}}\",\r\n\"password\": \"{{password}}\"\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/session/create",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"session",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getSession",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "userid",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\":\"130\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/session/get",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"session",
+										"get"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateSession",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\":\"130\",\r\n    \"userId\":\"18\",\r\n    \"valid\": \"0\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/session/update",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"session",
+										"update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteSession",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\":\"130\",\r\n    \"valid\": \"0\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/session/delete",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"session",
+										"delete"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Question",
+					"item": [
+						{
+							"name": "createQuestion",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "userid",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\":\"My title\",\r\n    \"content\": \"this is my question\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/question/create",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"question",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getQuestion",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"questionId\":\"4\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/question/get",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"question",
+										"get"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateQuestion",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"questionId\":\"4\",\r\n    \"title\":\"New title\",\r\n    \"voteCount\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/question/update",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"question",
+										"update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteQuestion",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"questionId\":\"2\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/question/delete",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"question",
+										"delete"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Answer",
+					"item": [
+						{
+							"name": "createAnswer",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"content\":\"my answer 5 is\",\r\n    \"questionId\":\"4\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/answer/create",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"answer",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getAnswer",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"answerId\":\"3\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/answer/get",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"answer",
+										"get"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateAnswer",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"answerId\":\"15\",\r\n    \"content\":\"Updated answer\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/answer/update",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"answer",
+										"update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteAnswer",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"answerId\":\"3\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/answer/delete",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"answer",
+										"delete"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Tag",
+					"item": [
+						{
+							"name": "createTag",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"tag\":\"JS\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/tag/create",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"tag",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getTag",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"tagId\":\"2\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/tag/get",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"tag",
+										"get"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateTag",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"tagId\":\"4\",\r\n    \"tag\":\"JS\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/tag/update",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"tag",
+										"update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteTag",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"tagId\":\"5\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/tag/delete",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"tag",
+										"delete"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "QTag",
+					"item": [
+						{
+							"name": "createQTag",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"questionId\": 5,\r\n    \"tagId\": 1 \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/qTag/create",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"qTag",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getQTag",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": 10\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/qTag/get",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"qTag",
+										"get"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateQTag",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"questionId\": 3,\r\n    \"tagId\": 1 \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/qTag/update",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"qTag",
+										"update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteQTag",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\":\"5\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/qTag/delete",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"qTag",
+										"delete"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Vote",
+					"item": [
+						{
+							"name": "createVote",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"itemId\": 16,\r\n    \"itemType\": \"answer\",\r\n    \"voteType\":\"up\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/vote/create",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"vote",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "getVote",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"voteId\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/vote/get",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"vote",
+										"get"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "updateVote",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"itemId\": 1,\r\n    \"itemType\": \"question\",\r\n    \"voteType\": \"down\",\r\n    \"userId\": 28,\r\n    \"voteId\": 3\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/vote/update",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"vote",
+										"update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "deleteVote",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "userId",
+										"value": "{{userId}}",
+										"type": "default"
+									},
+									{
+										"key": "x-refresh",
+										"value": "{{refreshToken}}",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"voteId\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{endPoint}}/api/vote/delete",
+									"host": [
+										"{{endPoint}}"
+									],
+									"path": [
+										"api",
+										"vote",
+										"delete"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{accessToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"const newAccessToken = responseHeaders['x-access-token']",
+					"",
+					"if(newAccessToken){",
+					"    console.log('Set new access token')",
+					"    pm.collectionVariables.set(\"accessToken\", newAccessToken);",
+					"    console.log(newAccessToken);",
+					"}",
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "accessToken",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "refreshToken",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "endPoint",
+			"value": "http://localhost:1336",
+			"type": "default"
+		},
+		{
+			"key": "userId",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "email",
+			"value": "test@example.com",
+			"type": "default"
+		},
+		{
+			"key": "password",
+			"value": "password",
+			"type": "default"
+		},
+		{
+			"key": "userName",
+			"value": "test",
+			"type": "default"
+		}
+	]
+}
