@@ -14,14 +14,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(deserializeUser);
 
-const db = dbConnection.getInstance();
-routesLoader(app);
-async () => {
-    await db.createConnection();
-}
-
 
 app.listen(port,host, ()=>{
+    const db = dbConnection.getInstance();
+    db.createConnection();
+    routesLoader(app);
     log.info(`Server listening at http://${host}:${port}`);
 });
 
