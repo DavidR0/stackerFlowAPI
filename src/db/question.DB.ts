@@ -13,9 +13,13 @@ export class QuestionDB{
         return await questionRepository.findOne(query);
     }
 
-    async getQuestions(query: any){
+    async getQuestions(){
         const questionRepository = getRepository(Question);
-        return await questionRepository.find(query);
+        return await questionRepository.find({
+            order: {
+                creationTime: "DESC"
+            },
+        });
     }
 
     async updateQuestion(question: Question){

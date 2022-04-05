@@ -23,8 +23,8 @@ export class QuestionService{
         return await this.qDatabase.getQuestion(question);
     }
 
-    async getQuestions(question: Question){
-        return await this.qDatabase.getQuestions(question);
+    async getQuestions(){
+        return await this.qDatabase.getQuestions();
     }
 
     async updateQuestion(question: Question, user: User){
