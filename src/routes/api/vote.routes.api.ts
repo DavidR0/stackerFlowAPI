@@ -9,9 +9,9 @@ const voteRouter = express.Router();
 const voteCtrl = new VoteController();
 const voteSchema = new VoteSchema();
 
-voteRouter.post("/create",validate(voteSchema.createVoteSchema),voteCtrl.createVoteHandler);
-voteRouter.get("/get",[requireUser,validate(voteSchema.getUpdateDeleteVoteSchema)],voteCtrl.getVoteHandler);
-voteRouter.patch("/update",[requireUser,validate(voteSchema.getUpdateDeleteVoteSchema)],voteCtrl.updateVoteHandler);
-voteRouter.delete("/delete",[requireUser,validate(voteSchema.getUpdateDeleteVoteSchema)],voteCtrl.deleteVoteHandler);
+voteRouter.post("/create",[validate(voteSchema.createVoteSchema)],voteCtrl.createVoteHandler);
+voteRouter.get("/get",[validate(voteSchema.getUpdateDeleteVoteSchema)],voteCtrl.getVoteHandler);
+voteRouter.patch("/update",[validate(voteSchema.getUpdateDeleteVoteSchema)],voteCtrl.updateVoteHandler);
+voteRouter.delete("/delete",[validate(voteSchema.getUpdateDeleteVoteSchema)],voteCtrl.deleteVoteHandler);
 
 export default voteRouter;

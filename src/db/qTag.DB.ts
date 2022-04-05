@@ -13,6 +13,13 @@ export class QTagDB{
         return await Repo.findOne(query);
     }
 
+    async getQTags(){
+        const Repo = getRepository(QuestionTag);
+        return await Repo.find({
+            relations: ["tag"],
+        });
+    }
+
     async updateQTag(qtag: QuestionTag){
         const Repo = getRepository(QuestionTag);
         return await Repo.save(qtag);

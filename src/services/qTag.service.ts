@@ -22,6 +22,21 @@ export class QTagService{
         return await this.tDataBase.getQTag(qtag);
     }
 
+    async getQTags(){
+        const rez = await this.tDataBase.getQTags();
+        //Create an object of tags from the result
+        const tags = rez.map(item => {
+            return {
+                tagId : item.tagId,
+                questionId : item.questionId,
+                qtagId : item.id,
+                tag: item.tag.tag,
+            }
+        });     
+
+        return tags;
+    }
+
     async updateQTag(qtag: QuestionTag, user: User){
         const itemToUpdate = await this.tDataBase.getQTag({id: qtag.id});
 

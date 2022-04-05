@@ -9,9 +9,9 @@ const tagRouter = express.Router();
 const tagCtrl = new TagController();
 const tagSchema = new TagSchema();
 
-tagRouter.post("/create",validate(tagSchema.createTagSchema),tagCtrl.createTagHandler);
-tagRouter.get("/get",[requireUser,validate(tagSchema.getUpdateDeleteTagSchema)],tagCtrl.getTagHandler);
-tagRouter.patch("/update",[requireUser,validate(tagSchema.getUpdateDeleteTagSchema)],tagCtrl.updateTagHandler);
-tagRouter.delete("/delete",[requireUser,validate(tagSchema.getUpdateDeleteTagSchema)],tagCtrl.deleteTagHandler);
+tagRouter.post("/create",[validate(tagSchema.createTagSchema)],tagCtrl.createTagHandler);
+tagRouter.get("/get",[validate(tagSchema.getUpdateDeleteTagSchema)],tagCtrl.getTagHandler);
+tagRouter.patch("/update",[validate(tagSchema.getUpdateDeleteTagSchema)],tagCtrl.updateTagHandler);
+tagRouter.delete("/delete",[validate(tagSchema.getUpdateDeleteTagSchema)],tagCtrl.deleteTagHandler);
 
 export default tagRouter;
