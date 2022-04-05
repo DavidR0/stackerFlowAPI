@@ -31,6 +31,14 @@ export class QuestionController{
         res.send(await qService.getQuestion(question));
     }
 
+    async getQuestionsHandler(req: Request, res: Response){
+        const qService = new QuestionService();
+        const question = qService.toQuestion(req.body);
+        
+        res.send(await qService.getQuestions(question));
+    }
+
+
     async updateQuestionHandler(req: Request, res: Response){
         const qService = new QuestionService();
         const question = qService.toQuestion(req.body);

@@ -13,6 +13,11 @@ export class QuestionDB{
         return await questionRepository.findOne(query);
     }
 
+    async getQuestions(query: any){
+        const questionRepository = getRepository(Question);
+        return await questionRepository.find(query);
+    }
+
     async updateQuestion(question: Question){
         const questionRepo = getRepository(Question);
         return await questionRepo.save(question);

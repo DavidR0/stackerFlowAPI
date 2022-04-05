@@ -27,7 +27,7 @@ export class SessionService{
               
         throw new Error("User does not have access rights");  
     }
-
+    
     async updateSession(session: Session, user: User){
         //Get the session
         const sessiondb = new SessionDB();

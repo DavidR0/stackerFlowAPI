@@ -1,4 +1,4 @@
-import { object, string, number } from "yup";
+import { object, string, number, boolean } from "yup";
 
 export class UserSchema{
     createUserSchema = object({
@@ -7,6 +7,7 @@ export class UserSchema{
             password: string()
             .required("Password is required"),
             email: string().email("Must be a valid email").required("Email is required"),
+            twoFact: boolean().optional()
         }),
     });
     

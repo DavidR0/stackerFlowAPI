@@ -23,6 +23,10 @@ export class QuestionService{
         return await this.qDatabase.getQuestion(question);
     }
 
+    async getQuestions(question: Question){
+        return await this.qDatabase.getQuestions(question);
+    }
+
     async updateQuestion(question: Question, user: User){
         const questionToUpdatedb = await this.qDatabase.getQuestion({questionId: question.questionId});
 
