@@ -11,7 +11,7 @@ const qtagSchema = new QTagSchema();
 
 qTagRouter.post("/create",validate(qtagSchema.createQTagSchema),qtagCtrl.createQTagHandler);
 qTagRouter.get("/get",[validate(qtagSchema.getUpdateDeleteQTagSchema)],qtagCtrl.getQTagHandler);
-qTagRouter.get("/getQTs",qtagCtrl.getQTagsHandler);
+qTagRouter.get("/getQTs",qtagCtrl.getQTagsHandler); // just like get, except returns all matches and not just one
 qTagRouter.patch("/update",[validate(qtagSchema.getUpdateDeleteQTagSchema)],qtagCtrl.updateQTagHandler);
 qTagRouter.delete("/delete",[validate(qtagSchema.getUpdateDeleteQTagSchema)],qtagCtrl.deleteQTagHandler);
 

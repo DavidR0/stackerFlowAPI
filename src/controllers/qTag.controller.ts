@@ -26,7 +26,9 @@ export class QuestionTagController{
 
     async getQTagsHandler(req: Request, res: Response){
         const tService = new QTagService();
-        res.send(await tService.getQTags());
+        const qtag = tService.toQTag(req.body);
+
+        res.send(await tService.getQTags(qtag));
     }
 
 
