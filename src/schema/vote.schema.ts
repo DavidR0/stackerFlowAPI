@@ -1,7 +1,7 @@
 import { object, string, number } from "yup";
 
 export class VoteSchema{
-    createVoteSchema = object({
+    createDeleteVoteSchema = object({
         body: object({
             voteType: string().required("voteType is required"),
             itemType: string().required("itemType is required"),

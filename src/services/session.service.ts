@@ -8,6 +8,7 @@ import log from "../logger";
 import { Session } from "../entities/Session";
 import {JwtService} from "./jwt.service";
 import {UserService} from "./user.service";
+import  lodash from "lodash";
 
 export class SessionService{
 
@@ -81,6 +82,7 @@ export class SessionService{
 
         //If user does not exist
         if(!foundUser){
+            log.info("User doesn't exist");
             return {
                 status: 404,
                 payload: "User does not exist."
@@ -121,22 +123,26 @@ export class SessionService{
         try{
             //Get access and session tokens
             const tokens = await this.getSessionTokens(foundUser);
-
+             
             //If new session tokens were created save them in db
             if(tokens.new){
                 const session = new Session();
                 session.userId = foundUser.userId;
                 session.jwtToken = tokens.refreshToken;
-                new SessionDB().addSession(session);
+                const rez = await new SessionDB().addSession(session);
+                tokens.sessionId = rez.id;
             }
 
             log.info("Successfully created session.")
             //Send created session tokens
+            const usr = lodash.omit(foundUser, ['password', 'privateKey']);
             return {
                 payload:{
-                    userId: foundUser.userId ,
+                    ...usr,
                     refreshToken: tokens.refreshToken,
-                    accessToken: tokens.accessToken},
+                    accessToken: tokens.accessToken,
+                    sessionId: tokens.sessionId,
+                },
                 status: 200
             }; 
         }catch(e: any){
@@ -198,7 +204,7 @@ export class SessionService{
 
         if(vSesh){
             //Verify if valid session contains valid Jwt token
-            const result = new JwtService().verifyJwt(vSesh.jwtToken);
+            const result = await new JwtService().verifyJwt(vSesh.jwtToken);
             
             //If expired, invalidate token in DB
             if(result.expired){
@@ -212,8 +218,15 @@ export class SessionService{
 
                 log.info("Found user session is expired, creating new session tokens.");
             }else{
+                const salt = new UserService().toUser(validUser);
+                //Create access token
+                const accessToken = new JwtService().signJwt(
+                    {...salt},
+                    {expiresIn: config.get('security.accessTokenTtl') }
+                );
+        
                 //Return valid session tokens
-                return{refreshToken: vSesh.jwtToken, accessToken:"", new: false};
+                return{sessionId: vSesh.id ,refreshToken: vSesh.jwtToken, accessToken, new: false};
             }
         }
 

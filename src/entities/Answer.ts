@@ -18,10 +18,10 @@ export class Answer {
   answerId: number;
 
   @Column("int", { name: "Question_ID", nullable: true })
-  questionId: number | null;
+  questionId: number;
 
   @Column("int", { name: "User_ID", nullable: true })
-  userId: number | null;
+  userId: number ;
 
   @Column("varchar", { name: "Author", length: 255 })
   author: string;
@@ -30,7 +30,7 @@ export class Answer {
   content: string;
 
   @Column("int", { name: "VoteCount", nullable: true, default: () => "'0'" })
-  voteCount: number | null;
+  voteCount: number;
 
   @Column("timestamp", {
     name: "CreationTime",

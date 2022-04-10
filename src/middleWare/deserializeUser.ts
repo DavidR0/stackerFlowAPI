@@ -13,7 +13,7 @@ const deserializeUser = async (req : Request, res: Response, next: NextFunction)
     const userId =  get(req, "headers.userid", "")
 
     if(!accessToken && !refreshToken ){ 
-        log.info("User has invalid tokens.");
+        log.info("User has no tokens.");
         return next();
     }
 
@@ -23,7 +23,7 @@ const deserializeUser = async (req : Request, res: Response, next: NextFunction)
     }
 
     ///Verify if user has a valid accessToken
-    const accessRes =  new JwtService().verifyJwt(accessToken)
+    const accessRes =  await new JwtService().verifyJwt(accessToken)
     //Valid accessToken
     if(accessRes.valid){
         const id = (<any>accessRes.decoded).userId; 
@@ -36,14 +36,12 @@ const deserializeUser = async (req : Request, res: Response, next: NextFunction)
     //Access token is expired or token belongs to another user
     log.info("User has invaild access token.");
     
-
     //See if we can reissue a new access token bassed on the refresh token
     if(accessRes.expired && refreshToken){
-        const refResult = new JwtService().verifyJwt(refreshToken)
-        //TODO check if refresh token has been invalidated in the db
+        const refResult = await new JwtService().verifyJwt(refreshToken)
         if(!refResult.valid){
             log.info("User has invaild refresh token.");
-            return next();
+            return res.status(403).send("Valid userId and session token is required.");
         }
 
         const id = (<any>refResult.decoded).userId;
@@ -53,13 +51,15 @@ const deserializeUser = async (req : Request, res: Response, next: NextFunction)
             const newAccessToken = await new JwtService().reIssueJwt(userId);
             if(newAccessToken){
                 res.setHeader('x-access-token', newAccessToken);
-                res.locals.user = new JwtService().verifyJwt(newAccessToken).decoded; 
+                res.locals.user = (await new JwtService().verifyJwt(newAccessToken)).decoded; 
+                console.log(newAccessToken)
                 log.info("Reissued user vaild access token.");  
                 return next();
             }
         }
         log.info("User is using wrong id");  
     }
+    log.info("User has invalid tokens.");
     return next();
 };
 

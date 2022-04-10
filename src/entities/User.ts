@@ -41,8 +41,8 @@ export class User {
   })
   twoFact: boolean | null;
 
-  @Column("int", { name: "Score", nullable: true, default: () => "'0'" })
-  score: number | null;
+  @Column("int", { name: "Score", nullable: false, default: () => "'0'" })
+  score: number;
 
   @Column("varchar", { name: "PrivateKey", nullable: true, length: 512 })
   privateKey: string | null;

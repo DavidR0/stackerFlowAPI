@@ -11,10 +11,11 @@ export class VoteController{
         const user = new UserService().toUser(res.locals.user);
 
         try{
+            log.info("Successfully created vote.");
             res.send(await vService.createVote(vote,user));
         }catch(e: any){
             log.error(e)
-            res.send(e.message);
+            res.status(404).send(e.message);
         }
     }
 
@@ -23,6 +24,13 @@ export class VoteController{
         const vote = vService.toVote(req.body);
 
         res.send(await vService.getVote(vote));
+    }
+
+    async getVotesHandler(req: Request, res: Response){
+        const vService = new VoteService();
+        const vote = vService.toVote(req.body);
+
+        res.send(await vService.getVotes(vote));
     }
 
     async updateVoteHandler(req: Request, res: Response){

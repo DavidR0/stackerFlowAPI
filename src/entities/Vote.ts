@@ -19,8 +19,8 @@ export class Vote {
   @Column("int", { name: "User_ID" })
   userId: number;
 
-  @Column("int", { name: "Item_ID", nullable: true })
-  itemId: number | null;
+  @Column("int", { name: "Item_ID", nullable: false })
+  itemId: number;
 
   @Column("enum", { name: "VoteType", enum: ["up", "down"] })
   voteType: "up" | "down";

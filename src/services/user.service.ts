@@ -6,7 +6,7 @@ import config from "config"
 import { User } from "../entities/User";
 
 export class UserService{
- 
+
     async createUser(user: User) {
         try{
             if(user.password && user.email && user.userName){
@@ -107,6 +107,17 @@ export class UserService{
 
         throw new Error("User does not have access rights");
     }
+
+    async updateUserPoints(user: User, points: number){
+        //get user from db
+        const userToUpdatedb = await new UserDB().getUser(user);
+        //updated userToUpdatedb points if user is found
+        if(userToUpdatedb != undefined){
+            userToUpdatedb.score = userToUpdatedb.score + points;
+            return await new UserDB().updateUser(userToUpdatedb);
+        }
+    }
+
     
     toUser(user: any): User{
 

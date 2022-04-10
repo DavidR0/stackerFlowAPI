@@ -19,8 +19,8 @@ export class Question {
   @PrimaryGeneratedColumn({ type: "int", name: "Question_ID" })
   questionId: number;
 
-  @Column("int", { name: "User_ID", nullable: true })
-  userId: number | null;
+  @Column("int", { name: "User_ID", nullable: false })
+  userId: number;
 
   @Column("varchar", { name: "Author", length: 255 })
   author: string;
@@ -38,8 +38,8 @@ export class Question {
   })
   creationTime: Date | null;
 
-  @Column("int", { name: "VoteCount", nullable: true, default: () => "'0'" })
-  voteCount: number | null;
+  @Column("int", { name: "VoteCount", nullable: false, default: () => "'0'" })
+  voteCount: number;
 
   @OneToMany(() => Answer, (answer) => answer.question)
   answers: Answer[];

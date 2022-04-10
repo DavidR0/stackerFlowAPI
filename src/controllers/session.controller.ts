@@ -9,11 +9,10 @@ export class SessionController{
         const sService = new SessionService();
 
         //Email and password is given by validator
-        const user = new UserService().toUser(req.body);
+        const user = new UserService().toUser(req.body); 
         const rez = await sService.createSession(user,req.body.twoFactPin);
-        
         res.status(rez.status).send(rez.payload);
-
+ 
     }
 
     async getSessionhandler(req: Request, res: Response){

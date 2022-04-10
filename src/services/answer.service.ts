@@ -55,6 +55,15 @@ export class AnswerService{
         throw new Error("User does not have access rights");
     }
 
+    async updateAnswerPoints(item: Answer, points: number) {
+        //get item from db
+        const itemToUpdate = await this.aDatabase.getAnswer(item);
+        if (itemToUpdate != undefined) {
+            //Update item points and save to db
+            itemToUpdate.voteCount += points;
+            return await this.aDatabase.updateAnswer(itemToUpdate);
+        }
+    } 
 
     toAnswer(ans: any): Answer{
         let answer = new Answer();

@@ -13,6 +13,11 @@ export class VoteDB{
         return await Repo.findOne(query);
     }
 
+    async getVotes(query: any){
+        const Repo = getRepository(Vote);
+        return await Repo.find(query);
+    }
+
     async updateVote(vote: Vote){
         const Repo = getRepository(Vote);
         return await Repo.save(vote);
