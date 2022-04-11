@@ -4,7 +4,11 @@ import { Tag } from "../entities/Tag";
 export class TagDB{
     
     async addTag(tag: Tag){
+        //Check if tag exists
         const Repo = getRepository(Tag);
+        const rez = await Repo.findOne(tag);
+        if(rez) return rez;
+        //If not add it
         return await Repo.save(tag);
     }
 
