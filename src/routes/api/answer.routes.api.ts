@@ -10,6 +10,7 @@ const answerSchema = new AnswerSchema();
 
 answerRouter.post("/create",validate(answerSchema.createAnswerSchema), answerCtrl.createAnswerHandler);
 answerRouter.get("/get",[validate(answerSchema.getUpdateDeleteAnswerSchema)], answerCtrl.getAnswerHandler);
+answerRouter.post("/getQuestionAnswers",[validate(answerSchema.getQuestionAnswers)], answerCtrl.getQuestionAnswersHandler);
 answerRouter.patch("/update",[validate(answerSchema.getUpdateDeleteAnswerSchema)], answerCtrl.updateAnswerHandler);
 answerRouter.delete("/delete",[validate(answerSchema.getUpdateDeleteAnswerSchema)], answerCtrl.deleteAnswerHandler);
 

@@ -18,6 +18,10 @@ export class AnswerService{
         return await this.aDatabase.getAnswer(answer);
     }
 
+    async getQuestionAnswers(answer: Question) {
+        return await this.aDatabase.getQuestionAnswers(answer);
+    }
+
     async updateAnswer(answer: Answer, user: User){
         const answerToUpdatedb = await this.aDatabase.getAnswer({answerId: answer.answerId});
 

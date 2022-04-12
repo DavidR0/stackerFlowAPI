@@ -1,7 +1,12 @@
 import { getRepository } from "typeorm";
 import { Answer } from "../entities/Answer";
+import { Question } from "../entities/Question";
 
 export class AnswerDB{
+    getQuestionAnswers(question: Question) {
+        const answerRepo = getRepository(Answer);
+        return answerRepo.find({where: {questionId: question.questionId}});
+    }
     
     async addAnswer(answer: Answer){
         const answerRepo = getRepository(Answer);

@@ -17,4 +17,11 @@ export class AnswerSchema{
             .required("answerId is required"),
         }),
     });
+
+    getQuestionAnswers = object({
+        body: object({
+            questionId: string()
+            .required("questionId is required"),
+        }),
+    });
 }

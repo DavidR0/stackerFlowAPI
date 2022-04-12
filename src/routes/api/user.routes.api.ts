@@ -10,7 +10,7 @@ const userCtrl = new UserController();
 const userSchema = new UserSchema();
 
 userRouter.post("/create",validate(userSchema.createUserSchema),userCtrl.createUserHandler);
-userRouter.get("/get",[requireUser,validate(userSchema.getUpdateUserSchema)],userCtrl.getUserHandler);
+userRouter.post("/get",[requireUser,validate(userSchema.getUpdateUserSchema)],userCtrl.getUserHandler);
 userRouter.patch("/update",[requireUser,validate(userSchema.getUpdateUserSchema)],userCtrl.updateUserHandler);
 userRouter.delete("/delete",[requireUser,validate(userSchema.getUpdateUserSchema)],userCtrl.deleteUserHandler);
 

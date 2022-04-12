@@ -4,6 +4,7 @@ import {UserDB} from "../db/user.DB";
 import bcrypt from "bcrypt"
 import config from "config"
 import { User } from "../entities/User";
+import lodash from "lodash";
 
 export class UserService{
 
@@ -37,9 +38,11 @@ export class UserService{
     async getUserById(requestedUser: User, requestingUser: User){
         if(requestingUser.type =="Admin" || requestedUser.userId == requestingUser.userId){
             return await new UserDB().getUser(requestedUser);
+        }else{
+            let rez : any = await new UserDB().getUser(requestedUser);
+            rez = lodash.omit(rez, ['password', 'privateKey', 'twoFact']);
+            return rez;
         }
-
-        throw new Error("User does not have access rights");
     }
 
     async updateUserById(userToUpdate: User, userRequestingUpdate: User){
