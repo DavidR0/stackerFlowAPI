@@ -30,6 +30,15 @@ export class AnswerController{
         res.send(rez);
     }
 
+    async getQuestionAnswersHandler(req: Request, res: Response){
+        const question = new QuestionService().toQuestion(req.body);
+        const rez = await new AnswerService().getQuestionAnswers(question);
+        log.info("Successfully got question answers.")
+        res.send(rez);
+    }
+
+    
+
     async updateAnswerHandler(req: Request, res: Response){
         const aService = new AnswerService();
         const answer = aService.toAnswer(req.body);
