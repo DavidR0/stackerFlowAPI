@@ -10,6 +10,7 @@ export class QuestionTagController{
         const user = new UserService().toUser(res.locals.user);
         
         try{
+            log.info("Successfully created qtag.")
             res.send(await tService.createQTag(user, qtag));
         }catch(e: any){
             log.error(e)
