@@ -1,6 +1,5 @@
 import express from "express";
 import validate from "../../middleWare/requestValidator";
-import requireUser from "../../middleWare/requireUser";
 import {VoteSchema} from "../../schema/vote.schema";
 import {VoteController} from "../../controllers/vote.controller";
 
@@ -11,7 +10,7 @@ const voteSchema = new VoteSchema();
 
 voteRouter.post("/create",[validate(voteSchema.createDeleteVoteSchema)],voteCtrl.createVoteHandler);
 voteRouter.get("/get",[validate(voteSchema.getUpdateDeleteVoteSchema)],voteCtrl.getVoteHandler);
-voteRouter.get("/getAll",voteCtrl.getVotesHandler);
+voteRouter.post("/getAll",voteCtrl.getVotesHandler);
 voteRouter.patch("/update",[validate(voteSchema.getUpdateDeleteVoteSchema)],voteCtrl.updateVoteHandler);
 voteRouter.delete("/delete",[validate(voteSchema.createDeleteVoteSchema)],voteCtrl.deleteVoteHandler);
 

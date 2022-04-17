@@ -113,11 +113,13 @@ export class UserService{
 
     async updateUserPoints(user: User, points: number){
         //get user from db
-        const userToUpdatedb = await new UserDB().getUser(user);
+        const userToUpdatedb = await new UserDB().getUser({userId: user.userId});
         //updated userToUpdatedb points if user is found
         if(userToUpdatedb != undefined){
             userToUpdatedb.score = userToUpdatedb.score + points;
             return await new UserDB().updateUser(userToUpdatedb);
+        }else{
+            log.error("Failed to update user points, user not found");
         }
     }
 

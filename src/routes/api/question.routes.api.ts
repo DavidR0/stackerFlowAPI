@@ -10,7 +10,7 @@ const questionCtrl = new QuestionController();
 const questionSchema = new QuestionSchema();
 
 questionRouter.post("/create",[ validate(questionSchema.createQuestionSchema)], questionCtrl.createQuestionHandler);
-questionRouter.get("/get",[validate(questionSchema.getUpdateDeleteQuestionSchema)], questionCtrl.getQuestionHandler);
+questionRouter.post("/get",[validate(questionSchema.getUpdateDeleteQuestionSchema)], questionCtrl.getQuestionHandler);
 questionRouter.get("/getAll", questionCtrl.getQuestionsHandler);
 questionRouter.patch("/update",[validate(questionSchema.getUpdateDeleteQuestionSchema)], questionCtrl.updateQuestionHandler);
 questionRouter.delete("/delete",[validate(questionSchema.getUpdateDeleteQuestionSchema)], questionCtrl.deleteQuestionHandler);

@@ -1,6 +1,7 @@
 import { QuestionDB } from "../db/question.DB";
 import { Question } from "../entities/Question";
 import { User } from "../entities/User";
+import log from "../logger";
 
 export class QuestionService {
     private qDatabase = new QuestionDB();
@@ -75,6 +76,8 @@ export class QuestionService {
             //Update item points and save to db
             itemToUpdate.voteCount += points;
             return await this.qDatabase.updateQuestion(itemToUpdate);
+        }else{
+            log.error("Fail to update question points, question does not exist");
         }
     }
 

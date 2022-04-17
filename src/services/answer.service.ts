@@ -2,6 +2,7 @@ import {AnswerDB} from "../db/answer.DB";
 import { Answer } from "../entities/Answer";
 import { Question } from "../entities/Question";
 import { User } from "../entities/User";
+import log from "../logger";
 
 export class AnswerService{
     private aDatabase = new AnswerDB();
@@ -66,6 +67,8 @@ export class AnswerService{
             //Update item points and save to db
             itemToUpdate.voteCount += points;
             return await this.aDatabase.updateAnswer(itemToUpdate);
+        }else{
+            log.error("Answer points update failed, answer does not exist");
         }
     } 
 
