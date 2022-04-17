@@ -19,7 +19,7 @@ export class QTagDB{
             relations: ["tag"],
             where: query,
         });
-    }t
+    }
 
     async updateQTag(qtag: QuestionTag){
         const Repo = getRepository(QuestionTag);
