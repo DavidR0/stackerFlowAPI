@@ -44,9 +44,10 @@ export class UserController{
             //We have the userId due to validator
             const userToUpdate = uService.toUser(req.body);
         try{
-            await uService.updateUserById(userToUpdate,userRequestingUpdate);
+            log.info("Updating user.")
+            const rez = await uService.updateUserById(userToUpdate,userRequestingUpdate);
             log.info("Successfully updated user.")
-            return res.status(200).send("Successfully updated user.")
+            return res.status(200).send(rez)
         }catch(e: any){
             log.error(e);
             return res.send(e.message);

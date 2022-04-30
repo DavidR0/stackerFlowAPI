@@ -5,6 +5,7 @@ import bcrypt from "bcrypt"
 import config from "config"
 import { User } from "../entities/User";
 import lodash from "lodash";
+import EmailService from "./email.service";
 
 export class UserService{
 
@@ -69,7 +70,13 @@ export class UserService{
                 }
 
                 if(userToUpdate.banned != undefined){
-                    userToUpdatedb.banned =  userToUpdate.banned;
+                    userToUpdatedb.banned = userToUpdate.banned;
+                    //If user is banned, send him an email
+                    if(userToUpdatedb.banned){
+                        const email = new EmailService();
+                        await email.sendEmail(userToUpdatedb.email, "Account banned", "Your account at stackerflow has been banned!");
+                        //await email.sendEmail("davidrusuyzf@gmail.com", "Account banned", "Your account has been banned");
+                    }
                 }
 
                 if(userToUpdate.score != undefined){
