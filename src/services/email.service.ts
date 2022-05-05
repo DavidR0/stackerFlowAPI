@@ -27,6 +27,7 @@ export default class EmailService {
         mailOptions.text = text;
         mailOptions.html = text;
 
+        console.log("Sending email");
         await this.transporter.sendMail(mailOptions, (error: any, info: any) => {
             if (error) {
                 return console.log(error);
